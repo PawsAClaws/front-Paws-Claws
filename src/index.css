@@ -1,0 +1,51 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+
+
+@theme {
+
+    --font-Quicksand: Quicksand, sans-serif;
+
+
+    --color-primary: #FE9030;
+    --color-bg-light: #E5E7EB;
+    --color-border-light: #d8d8d8;
+
+
+    --breakpoint-xxl: 110rem;
+    --breakpoint-xl: 80rem;
+    --breakpoint-lg: 64rem;
+    --breakpoint-md: 48rem;
+    --breakpoint-sm: 32rem;
+
+}
+
+body {
+
+    /* font-family: font-Quicksand; */
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: white !important;
+
+    padding: 0 20px !important;
+}
+
+
+.phone-input-container input {
+    padding: 10px !important;
+
+}
+
+.PhoneInputCountry {
+    padding: 10px !important;
+    border-right: 2px solid #828282 !important;
+}
+
+
+.active {
+
+    color: var(--color-primary) !important;
+}
