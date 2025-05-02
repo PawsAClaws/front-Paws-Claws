@@ -1,28 +1,77 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Pencil, ShareNetwork, Flag, Eye, User } from "phosphor-react";
 import avatar from '../assets/avatar.png'
-import myAvatar from '../assets/myAvatar.jpg'
-import pic1 from '../assets/pic1.png'
-import pic2 from '../assets/pic2.png'
-import pic3 from '../assets/pic3.png'
+import { Link } from 'react-router-dom';
+import { getUserData } from '../store/getUserSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteMyAd, fetchMyAds } from '../lib/myAds.js';
+import { toast } from 'react-toastify';
 
 
-
-const myAds = [
-
-    { img: pic1, title: 'Cute 2 puppies for sale', description: '2 dogs male and female golden color, they took the vaccine and in a good...', price: '$100', state: 'disabled' },
-    { img: pic2, title: 'Cute 2 puppies for sale', description: '2 dogs male and female golden color, they took the vaccine and in a good...', price: '$100', state: 'live' },
-    { img: pic3, title: 'Cute 2 puppies for sale', description: '2 dogs male and female golden color, they took the vaccine and in a good...', price: '$100', state: 'live' },
-
-    { img: pic1, title: 'Cute 2 puppies for sale', description: '2 dogs male and female golden color, they took the vaccine and in a good...', price: '$100', state: 'disabled' },
-    { img: pic2, title: 'Cute 2 puppies for sale', description: '2 dogs male and female golden color, they took the vaccine and in a good...', price: '$100', state: 'live' },
-    { img: pic3, title: 'Cute 2 puppies for sale', description: '2 dogs male and female golden color, they took the vaccine and in a good...', price: '$100', state: 'live' },
-
-
-]
 
 
 const Profile = () => {
+
+
+    const [myAdsData, setMyAdsData] = useState([]);
+    const dispatch = useDispatch();
+    const userData = useSelector((state) => state.getUser.user);
+
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear().toString().slice(-2);
+        return `${day}/${month}/${year}`;
+    };
+
+
+    useEffect(() => {
+        dispatch(getUserData());
+    }, [dispatch]);
+
+    useEffect(() => {
+
+        const getAdsData = async () => {
+
+            try {
+
+                const data = await fetchMyAds();
+
+                setMyAdsData(data.data);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getAdsData();
+
+    }, [])
+
+    const handleDeleteAd = async (id) => {
+        try {
+            await deleteMyAd(id);
+            setMyAdsData(prevAds => prevAds.filter(ad => ad.id !== id));
+            toast.success(" Your Ad deleted successfully");
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong");
+        }
+    }
+
+    const handleShare = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            toast.success("Link copied to clipboard");
+        } catch (error) {
+            console.error('Failed to copy: ', error);
+        }
+    }
+
+
+
 
 
 
@@ -35,7 +84,7 @@ const Profile = () => {
 
                 <div className='absolute top-[85%] right-[3%] -translate-y-1/2 -translate-x-1/2 flex gap-2 text-white cursor-pointer md:text-3xl'>
                     <Pencil />
-                    <span>Edit</span>
+                    <Link to="/editProfile">Edit</Link>
                 </div>
 
             </div>
@@ -46,17 +95,18 @@ const Profile = () => {
 
                     <div className='flex flex-col items-center md:flex-row gap-4 relative'>
                         <div className='w-[100px] h-[100px] md:h-[240px] md:w-[240px] rounded-full overflow-hidden mt-[-50px]'>
-                            <img src={myAvatar} alt="" />
+                            <img src={userData.photo ? userData.photo : avatar} alt="" />
                         </div>
 
                         <div className='flex flex-col items-center md:items-start justify-center'>
-                            <div className='text-xl md:text-3xl lg:text-[40px]'> Samuel Rawles </div>
-                            <div className='md:text-2xl text-[#424242] opacity-50'> alexarawles@gmail.com </div>
+                            <div className='text-xl md:text-3xl lg:text-[40px]'> <span>{userData?.firstName}</span> <span>{userData?.lastName}</span> </div>
+                            <div className='md:text-2xl text-[#424242] opacity-50'> {userData?.email} </div>
                         </div>
                     </div>
 
                     <div className='flex gap-6 justify-center md:justify-end text-xl'>
-                        <div className='flex gap-2 items-center'>
+
+                        <div onClick={handleShare} className='flex gap-2 items-center cursor-pointer'>
                             <ShareNetwork />
                             <span> share </span>
                         </div>
@@ -80,24 +130,24 @@ const Profile = () => {
 
                     {
 
-                        myAds.map((item, index) => {
+                        myAdsData.map((item, index) => {
 
                             return (
-                                <div className='rounded-[8px] overflow-hidden'>
+                                <div key={index} className='rounded-[8px] overflow-hidden'>
 
                                     <div className='bg-[#F6EBE1] flex gap-5 p-3.5'>
 
                                         <div> <img
                                             className='w-[220px] h-[200px] object-cover '
-                                            src={item.img}
-                                            alt=""
+                                            src={item.photo}
+                                            alt={item.title}
                                         />  </div>
 
                                         <div className='flex flex-col gap-2'>
                                             <div className='text-xl'> {item.title} </div>
                                             <div className='text-[#5F5B5B]'> {item.description} </div>
                                             <div> {item.price} </div>
-                                            <div> Animals - Dogs  </div>
+                                            <div>{item.type}  </div>
                                         </div>
 
                                     </div>
@@ -106,9 +156,9 @@ const Profile = () => {
                                         <div className='flex flex-col gap-6  '>
 
                                             <div className='flex justify-between mt-[18px]'>
-                                                <div> Published on 29 Oct </div>
+                                                <div> Published on  {item.createdAt ? formatDate(item.createdAt) : ''} </div>
 
-                                                <div className='bg-[#999999] w-fit px-[18px] py-1.5 rounded-[30px]'> {item.state} </div>
+                                                <div className='bg-[#999999] w-fit px-[18px] py-1.5 rounded-[30px]'> live </div>
 
                                             </div>
 
@@ -127,7 +177,7 @@ const Profile = () => {
                                         </div>
 
                                         <div className='flex gap-3 mt-16 text-white'>
-                                            <button className='bg-[#E6492D] w-1/2 py-3 rounded-[8px] cursor-pointer '> remove </button>
+                                            <button onClick={() => handleDeleteAd(item.id)} className='bg-[#E6492D] w-1/2 py-3 rounded-[8px] cursor-pointer '> remove </button>
                                             <button className='bg-[#FE8E2F] w-1/2 py-3 rounded-[8px] cursor-pointer'> republish </button>
                                         </div>
 

@@ -30,7 +30,7 @@ const PostDetails = () => {
 
                 const data = await fetchPostDetails(id)
 
-                setPostDetails(data.data)
+                setPostDetails(data?.data)
                 console.log(data.data);
 
 

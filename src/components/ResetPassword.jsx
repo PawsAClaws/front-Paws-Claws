@@ -7,40 +7,51 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup'
 import axios from 'axios';
 import { useFormik } from 'formik'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 
 
 
 
-export default function Login() {
+export default function ResetPassword() {
 
 
     let [errorMsg, setErrorMsg] = useState()
-    let navigate = useNavigate()
+
+    let [successMsg, setSuccessMsg] = useState(false)
+
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate()
+
+    const { token } = useParams()
 
 
 
     async function sendLoginData(values) {
 
-        axios.post('https://backend-online-courses.onrender.com/api/v1/auth/login', values).then(({ data }) => {
+        axios.post('https://backend-online-courses.onrender.com/api/v1/password/reset', values, {
+
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
+
+        }).then(({ data }) => {
 
             console.log(data);
 
 
-            if (data.message == "login success") {
 
-                toast.success("login success")
-                localStorage.setItem('token', data?.data?.token)
-                navigate('/home')
+            if (data.status == "success") {
+                setSuccessMsg(true)
+                navigate('/login')
+                toast.success("password reset successfully")
+
             }
 
 
         }).catch(err => {
             console.log(err)
-            setErrorMsg(err.response.data.message)
-            toast.error(`${err.response.data.message}`)
         })
 
     }
@@ -49,20 +60,17 @@ export default function Login() {
     const validationSchema = yup.object({
 
 
-        email: yup.string().email("email is invalid").required("email is required"),
-        password: yup.string().required("password is requird").matches(/^[a-zA-Z0-9]{4,}$/, "password must be  at lest 4 carr "),
-
+        newPassword: yup.string().required("newPassword is requird").matches(/^[a-zA-Z0-9]{4,}$/, "newPassword must be  at lest 4 carr "),
 
     })
 
 
 
     let register = useFormik({
+
         initialValues: {
 
-            email: "",
-            password: "",
-
+            newPassword: "",
         },
         validationSchema,
 
@@ -77,6 +85,7 @@ export default function Login() {
 
 
     return (
+
         <div className='h-screen bg-cover bg-center relative' style={{ backgroundImage: `url(${login})` }}>
             <div className='absolute top-0 left-0 w-full h-full bg-black opacity-50'></div>
 
@@ -97,28 +106,20 @@ export default function Login() {
 
                     <form onSubmit={register.handleSubmit} className='w-[70%] ' >
 
-                        <p className='mb-5 font-semibold'>Nice to see you again </p>
 
-
-
-                        <div className='flex flex-col mb-4 gap-1.5'>
-                            <label className='text-[12px]' htmlFor="email"> Email Address </label>
-                            <input value={register.values.email} onBlur={register.handleBlur} onChange={register.handleChange} className='bg-[#F2F2F2] px-3 py-3 rounded-lg' type="email" name="email" id="email" placeholder='Enter your email address' />
-                            {register.touched.email && register.errors.email ? <div className='text-red-500 text-[12px]'> {register.errors.email} </div> : null}
-                        </div>
 
                         <div className='flex flex-col mb-4 gap-1.5 relative'>
-                            <label className='text-[12px]' htmlFor="password"> Password </label>
+                            <label className='text-[12px]' htmlFor="newPassword"> New Password </label>
 
                             <input
-                                value={register.values.password}
+                                value={register.values.newPassword}
                                 onBlur={register.handleBlur}
                                 onChange={register.handleChange}
                                 className='bg-[#F2F2F2] px-3 py-3 rounded-lg pr-10'
                                 type={showPassword ? "text" : "password"}
-                                name="password"
-                                id="password"
-                                placeholder='Enter your password'
+                                name="newPassword"
+                                id="newPassword"
+                                placeholder='Enter your newPassword'
                             />
 
 
@@ -133,29 +134,16 @@ export default function Login() {
                                 )}
                             </div>
 
-                            {register.touched.password && register.errors.password && (
-                                <div className='text-red-500 text-[12px]'> {register.errors.password} </div>
+                            {register.touched.newPassword && register.errors.newPassword && (
+                                <div className='text-red-500 text-[12px]'> {register.errors.newPassword} </div>
                             )}
                         </div>
 
 
 
 
-                        <div className='flex gap-1 items-start justify-between '>
-                            <div>
-                                <label className="inline-flex items-center mb-5 cursor-pointer">
-                                    <input type="checkbox" value="" className="sr-only peer" />
-                                    <div className="relative w-11 h-6 bg-[#F2F2F2] peer-focus:outline-none    rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white  after:rounded-full after:w-5 after:h-5 after:transition-all  peer-checked:bg-primary "></div>
-                                    <span className="ms-3 text-sm font-medium text-gray-900 "> Remember me </span>
-                                </label>
-
-                            </div>
-                            <Link to="/forgetPassword"> Forget Password </Link>
-
-                        </div>
-
                         <div className='flex justify-center items-center mb-10'>
-                            <button type='submit' className='bg-primary cursor-pointer  py-2.5 text-white mt-3 rounded-2xl w-[100%]'> Sigin in </button>
+                            <button type='submit' className='bg-primary cursor-pointer  py-2.5 text-white mt-3 rounded-2xl w-[100%]'> Submit </button>
                         </div>
 
                     </form>
@@ -169,13 +157,14 @@ export default function Login() {
 
                     <div className='flex justify-center items-center flex-col   '>
                         <div className='w-[70%] h-[1px] bg-[#E5E5E5] mb-10'></div>
-                        <button className='bg-[#333333] py-2.5 outline-t cursor-pointer  border-[#F2F2F2] rounded-2xl w-[70%] text-white'> <span><img className='inline-block mr-1' src={google} alt="" /></span>  Or Continue with Google </button>
                     </div>
 
                     <div className='text-center'> Dont have an account? <span> <Link className='text-primary' to="/register"> Sign up </Link></span> </div>
                 </div>
 
                 {setErrorMsg && <div className='text-red-500 text-lg text-center'> {errorMsg} </div>}
+
+                {successMsg && <div className='text-center mt-10 text-green-300 text-2xl'> Password reset successfully </div>}
 
             </div>
 

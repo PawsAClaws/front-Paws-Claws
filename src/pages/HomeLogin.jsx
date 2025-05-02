@@ -12,14 +12,25 @@ import SalePets from "../components/SalePets";
 import History from "../components/History";
 import AdoptionPets from "../components/AdoptionPets";
 import ShopPets from "../components/ShopPets";
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getAllWishList } from "../store/wishlist";
 
-;
 
 
 
 export default function HomeLogin() {
 
     const slides = [slide1, slide2, slide3];
+
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+
+        dispatch(getAllWishList());
+    }, [dispatch]);
+
 
     return (
 
@@ -49,9 +60,7 @@ export default function HomeLogin() {
 
                     <div>
 
-                        {/* History */}
 
-                        <History />
 
                         <AdoptionPets />
                         <SalePets />

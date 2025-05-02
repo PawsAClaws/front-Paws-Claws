@@ -9,7 +9,9 @@
 
 
     --color-primary: #FE9030;
-    --color-bg-light: #E5E7EB;
+
+    --color-bg-app: #F9FAFB;
+
     --color-border-light: #d8d8d8;
 
 
@@ -48,4 +50,28 @@ body {
 .active {
 
     color: var(--color-primary) !important;
+    font-weight: 600 !important;
+}
+
+
+.custom-checkbox {
+    @apply appearance-none w-4 h-4 border border-gray-300 rounded-sm relative cursor-pointer;
+    background-color: #fff;
+}
+
+.custom-checkbox:checked {
+    background-color: #f97316;
+    border-color: transparent;
+}
+
+.custom-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    top: 0.1rem;
+    left: 0.35rem;
+    width: 0.25rem;
+    height: 0.5rem;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }

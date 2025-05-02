@@ -7,7 +7,7 @@ import * as yup from 'yup'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import Location from '../lib/location';
+import Location from '../lib/Location';
 import { useNavigate } from 'react-router-dom';
 
 

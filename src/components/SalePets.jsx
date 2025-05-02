@@ -42,11 +42,10 @@ export default function SalePets() {
             <div className=' container mx-auto  '>
 
 
-
-                <div className='flex justify-between items-center mt-9 '>
+                <div className='flex justify-between items-center mt-9 mb-5'>
 
                     <h3 className={`text-3xl `}> Pets for sale </h3>
-                    <Link to="/animals" className='text-primary cursor-pointer '>See All <ArrowRight className='inline-block ' /></Link>
+                    <Link to="/animals" className='text-primary cursor-pointer text-2xl'>See All <ArrowRight className='inline-block ' /></Link>
 
                 </div>
 

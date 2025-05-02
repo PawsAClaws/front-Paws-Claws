@@ -15,14 +15,24 @@ import CreatePost from './pages/CreatePost';
 import PostDetails from './pages/PostDetails';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
-import Location from './lib/location';
 import ProutectedRoutes from './components/protectedRoutes/ProutectedRoutes';
 import { ToastContainer } from 'react-toastify';
 import Terms from './components/Terms ';
 import Policy from './components/Policy';
 import About from './components/About';
+import SearchItems from './pages/SearchItems';
+import MyWishLists from './pages/myWishLists';
+import ForgetPassword from './components/ForgetPassword';
+import ResetPassword from './components/ResetPassword';
+import EditProfile from './pages/EditProfile';
+import DoctorDetails from './pages/DoctorDetails';
+import DoctorPage from './pages/DoctorPage';
+import BecomeDoctor from './components/BecomeDoctor';
 
 export default function App() {
+
+
+
 
   const routes = createBrowserRouter([
 
@@ -34,7 +44,11 @@ export default function App() {
         { path: '/terms', element: <Terms /> },
         { path: '/policy', element: <Policy /> },
         { path: '/about', element: <About /> },
-        { path: '*', element: <NotFound /> }
+        { path: '*', element: <NotFound /> },
+        { path: "/doctors", element: <Doctors /> },
+        { path: "/doctorDetails", element: <DoctorDetails /> },
+        { path: "/doctorPage", element: <DoctorPage /> },
+        { path: "/becomeDoctor", element: <BecomeDoctor /> },
       ]
     },
 
@@ -50,8 +64,11 @@ export default function App() {
         { path: '/doctors', element: <Doctors /> },
         { path: '/shop', element: <Shop /> },
         { path: '/categories', element: <Categories /> },
-        { path: '/location', element: <Location /> },
         { path: '/profile', element: <Profile /> },
+        { path: "/search", element: <SearchItems /> },
+        { path: "/myWishlist", element: <MyWishLists /> },
+        { path: "/editProfile", element: <EditProfile /> },
+
       ]
     },
 
@@ -61,6 +78,12 @@ export default function App() {
     },
     {
       path: '/register', element: <Register />
+    },
+    {
+      path: '/forgetPassword', element: <ForgetPassword />
+    },
+    {
+      path: '/resetPassword/:token', element: <ResetPassword />
     },
 
   ]);

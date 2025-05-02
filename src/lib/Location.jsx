@@ -9,14 +9,20 @@ const Location = ({ onCountryChange, onCityChange }) => {
     const [cities, setCities] = useState([]);
 
     const handleChange = (e) => {
-        console.log(e.target.value);
-        const [countryName, countryCode] = e.target.value.split(":");
-        const code = e.target.value.split(":")[1];
+        const countryName = e.target.value;
+        console.log(countryName);
+
+        const selectedCountry = countries.find(
+            (country) => country.name.common === countryName
+        );
+
+        const countryCode = selectedCountry?.cca2;
         const cities = City.getCitiesOfCountry(countryCode) || [];
         setCities(cities);
 
         if (onCountryChange) onCountryChange(countryName);
     };
+
 
     const handleCityChange = (e) => {
         console.log(e.target.value);
@@ -39,9 +45,10 @@ const Location = ({ onCountryChange, onCityChange }) => {
                     Select a country
                 </option>
                 {countries.map((country, i) => (
-                    <option key={i} value={`${country.name.common}:${country.cca2}`}>
+                    <option key={i} value={country.name.common}>
                         {country.name.common}
                     </option>
+
                 ))}
             </select>
 

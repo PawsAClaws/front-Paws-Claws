@@ -36,10 +36,10 @@ export default function ShopPets() {
 
             <div className=' container mx-auto '>
 
-                <div className='flex justify-between items-center  mt-9'>
+                <div className='flex justify-between items-center  mb-5 mt-9'>
 
                     <h3 className='text-3xl  '>Featured products</h3>
-                    <Link to="/shop" className='text-primary cursor-pointer '>See All <ArrowRight className='inline-block ' /></Link>
+                    <Link to="/shop" className='text-primary cursor-pointer text-2xl'>See All <ArrowRight className='inline-block ' /></Link>
                 </div>
 
                 <Swiper

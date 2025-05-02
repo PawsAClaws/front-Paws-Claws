@@ -1,72 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import { MapPinLine, Heart } from "phosphor-react";
 import { toast } from 'react-toastify';
-import { fetchWishList, myWishlists } from '../lib/WishListApi';
 import { Link } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
+import { toggleItem } from '../store/wishlist';
+import { fetchWishList } from '../lib/WishListApi';
+import { useDispatch } from 'react-redux';
+import { openLoginAlert } from '../store/loginAlertSlice';
 
 
 export default function Card({ data }) {
 
 
-    const [inWishlist, setInWishlist] = useState(false);
+    const dispatch = useDispatch();
+
+    const wishlist = useSelector(state => state.getWishlist.items);
 
 
+    const inWishlist = wishlist?.some(item => item.postId === data.id);
 
 
-    useEffect(() => {
-        const fetchAllWishlist = async () => {
-
-            try {
-                const wishlistData = await myWishlists();
-
-                const isInList = wishlistData?.data.some(item => item.postId == data.id);
-                setInWishlist(isInList);
-
-            } catch (error) {
-                console.log("Error fetching wishlist:", error);
-            }
-        };
-
-        fetchAllWishlist();
-
-    }, []);
+    function requireLogin(callback) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            dispatch(openLoginAlert());
+        } else {
+            callback();
+        }
+    }
 
 
+    const handleWishlist = async (e) => {
 
-
-    const handleWishlist = async () => {
+        e.preventDefault();
+        e.stopPropagation();
 
         try {
 
             const response = await fetchWishList(data.id);
-
-
-
-            if (response.message == "post added to wishlist") {
-                const newState = !inWishlist;
-                setInWishlist(newState);
-
-
-                toast.success(
-                    "Added to wishlist ❤️"
-                );
-
-            } else {
-
-                const newState = !inWishlist;
-                setInWishlist(newState);
-
-                toast.success(
-                    "Removed from wishlist 💔"
-                );
-            }
+            dispatch(toggleItem(data.id));
+            toast.success(response.message.includes("added") ? "Added to wishlist ❤️" : "Removed from wishlist 💔");
 
         } catch (error) {
             console.log(error);
         }
     }
-
 
 
 
@@ -78,18 +56,22 @@ export default function Card({ data }) {
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    handleWishlist();
+                    handleWishlist(e);
 
                 }}
                 className='w-[22px] h-[22px] bg-white md:w-8 md:h-8 lg:w-10 lg:h-10 absolute top-4 right-4 rounded-sm '>
                 <div className={`flex justify-center items-center h-full 
-            ${inWishlist ? "text-[#FF4646]" : "text-gray-400"} 
+                    ${inWishlist ? "text-[#FF4646]" : "text-gray-400"} 
+
             text-[14px] md:text-[22px] lg:text-[27px]`}>
+
                     <Heart weight={inWishlist ? "fill" : "regular"} />
                 </div>
             </div>
 
-            <img src={data.photo} alt="" className="w-full   " />
+            <div className=' w-full md:w-full h-[150px] md:h-[200px] '>
+                <img src={data.photo} alt={data.title} className="w-full h-full object-cover" />
+            </div>
 
             <div className="py-6 px-[18px]">
                 <h4 className="text-xl font-semibold  mb-2"> {data.title} </h4>
@@ -99,7 +81,7 @@ export default function Card({ data }) {
 
                     <div className='flex items-center'>
                         <MapPinLine className=' text-primary text-xl' />
-                        <p className='ml-2 text-sm opacity-50'> {data.country} ( {data.city} ) </p>
+                        <p className='ml-1 text-sm opacity-50'> {data.country} ( {data.city} ) </p>
                     </div>
 
                     <div className='text-primary text-xl'> ${data.price} </div>

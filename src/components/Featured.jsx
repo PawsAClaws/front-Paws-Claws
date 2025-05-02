@@ -9,11 +9,11 @@ export default function Featured() {
 
     return (
 
-        <div className='container mx-auto  '>
+        <div className='container mx-auto pb-16'>
 
-            <div className='flex justify-between items-center mt-9'>
+            <div className='flex justify-between items-center mt-9 mb-5'>
                 <h3 className='text-3xl  text-center'> doctors </h3>
-                <p className='text-primary cursor-pointer '>See All <ArrowRight className='inline-block ' /></p>
+                <p className='text-primary cursor-pointer text-2xl'>See All <ArrowRight className='inline-block ' /></p>
             </div>
 
             <Swiper

@@ -4,7 +4,8 @@ import ReactPaginate from "react-paginate";
 import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
 import Card from "../components/Card";
-import { Link } from "react-router-dom";
+
+import Filter from "../components/Filter";
 
 const itemsPerPage = 24;
 
@@ -13,12 +14,45 @@ export default function Animals() {
     const [currentPage, setCurrentPage] = useState(0);
 
     const [allSell, setAllSell] = useState([]);
+    const [activeFilter, setActiveFilter] = useState(null);
+
+    const [filters, setFilters] = useState({
+        price: '',
+        country: '',
+        postedAt: ''
+    });
+
+
+    console.log(filters);
+    console.log(allSell);
+
+
+    const filteredItems = allSell.filter(item => {
+        let isValid = true;
+
+        if (filters.country) {
+            const country = item.country?.toLowerCase() || '';
+            isValid = isValid && country.includes(filters.country.toLowerCase());
+        }
+
+        if (filters.price) {
+            isValid = isValid && item.price <= filters.price;
+        }
+
+        if (filters.postedAt) {
+            const itemDate = new Date(item.createdAt).toISOString().split('T')[0];
+            isValid = isValid && itemDate === filters.postedAt;
+        }
+
+        return isValid;
+    });
+
+
 
     const sell = "sale";
-
     const offset = currentPage * itemsPerPage;
-    const currentItems = allSell.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(allSell.length / itemsPerPage);
+    const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
 
 
     useEffect(() => {
@@ -38,13 +72,12 @@ export default function Animals() {
         getSellData();
     }, [])
 
-
-
-
-
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
+
+
+
 
     return (
 
@@ -52,24 +85,11 @@ export default function Animals() {
 
 
             <div className="container mx-auto ">
-                {/* History Component */}
-                <div className="pt-[34px]">
-                    <History />
-                </div>
+
 
                 {/* Filters and Post Ad */}
-                <div className="flex justify-between items-center mt-12">
-                    <ul className="gap-3 hidden md:flex">
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Price</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Location</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Distance</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Posted at</li>
-                        <li className="bg-[#FBF0E7] rounded-[22px] px-4 py-3">Clear All</li>
-                    </ul>
-                    <Link to="/categories" className="bg-[#FEA230] cursor-pointer text-white rounded-lg px-4 py-[18px]">
-                        Post your ad
-                    </Link>
-                </div>
+
+                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} filters={filters} setFilters={setFilters} />
 
                 {/* Sort Section */}
                 <div className="flex justify-between items-center my-8">
@@ -81,7 +101,7 @@ export default function Animals() {
 
                 {/* Image Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
-                    {allSell.map((item, index) => (
+                    {currentItems.map((item, index) => (
 
                         <Card key={index} data={item} />
 
