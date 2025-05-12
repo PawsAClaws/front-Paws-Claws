@@ -189,7 +189,7 @@ const PostDetails = () => {
 
                 <div>
 
-                    {/* <h6 className='text-2xl mb-7'> Related ads </h6> */}
+
 
                     <Pets />
 

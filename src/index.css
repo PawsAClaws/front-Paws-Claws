@@ -75,3 +75,19 @@ body {
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
+
+
+.react-datepicker__input-container {
+    color: white !important;
+}
+
+.react-datepicker__day--selected {
+
+    background-color: var(--color-primary) !important;
+}
+
+.react-datepicker-wrapper {
+
+    width: 100% !important;
+
+}

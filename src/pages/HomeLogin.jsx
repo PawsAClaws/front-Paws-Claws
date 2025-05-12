@@ -9,7 +9,6 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import Featured from "../components/Featured";
 import SalePets from "../components/SalePets";
-import History from "../components/History";
 import AdoptionPets from "../components/AdoptionPets";
 import ShopPets from "../components/ShopPets";
 import { useEffect } from 'react';

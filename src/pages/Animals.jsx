@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import History from "../components/History";
 import ReactPaginate from "react-paginate";
 import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
 import Card from "../components/Card";
-
 import Filter from "../components/Filter";
 
 const itemsPerPage = 24;
@@ -23,8 +21,6 @@ export default function Animals() {
     });
 
 
-    console.log(filters);
-    console.log(allSell);
 
 
     const filteredItems = allSell.filter(item => {
@@ -50,6 +46,7 @@ export default function Animals() {
 
 
     const sell = "sale";
+
     const offset = currentPage * itemsPerPage;
     const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
     const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
@@ -123,6 +120,7 @@ export default function Animals() {
                         disabledClassName={"opacity-50 cursor-not-allowed"}
                     />
                 </div>
+
             </div >
 
         </div>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import logo from '../assets/logo.png'
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Heart, Globe } from "phosphor-react";
+import { Heart, Globe, Bell } from "phosphor-react";
 import avatar from '../assets/avatar.png'
 import flag from '../assets/US flag.svg'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
@@ -11,6 +11,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllWishList } from "../store/wishlist.js";
 import { getUserData } from '../store/getUserSlice.js';
 import MobileNav from './nav/MobileNav.jsx';
+import { togleCard } from '../store/becomeDoctorSlice.js';
+import NotificationsCard from './NotificationsCard.jsx';
+import { fetchNotifications } from '../store/notificationsSlice.js';
 
 
 
@@ -24,10 +27,15 @@ export default function NavbarLogin() {
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate()
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
     const dispatch = useDispatch();
     const wishlistItems = useSelector((state) => state.getWishlist.items);
     const userData = useSelector((state) => state.getUser.user);
+    const notificationsList = useSelector((state) => state.notifications);
+
+    console.log(notificationsList);
+
 
 
     function handleSignOut() {
@@ -40,6 +48,7 @@ export default function NavbarLogin() {
     useEffect(() => {
         dispatch(getAllWishList());
         dispatch(getUserData());
+        dispatch(fetchNotifications());
     }, [dispatch]);
 
 
@@ -77,21 +86,15 @@ export default function NavbarLogin() {
 
                         </div>
 
-                        <div className='hidden lg:flex items-center gap-1'>
-
-                            <div> <img src={flag} alt="" /> </div>
-
-                        </div>
-
                         <Search />
 
                         <div className=' gap-4 hidden lg:flex'>
 
-                            <div className='border-e-black border-e pe-3 text-2xl cursor-pointer'>
+                            <div className='border-e-black border-e pe-3 lg:text-lg xl:text-2xl cursor-pointer'>
                                 <p>العربية</p>
                             </div>
 
-                            <Link to="/myWishlist" className='text-primary border-e-black text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'>
+                            <Link to="/myWishlist" className='text-primary border-e-black lg:text-lg xl:text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'>
                                 Wishlist
                                 <span className="relative">
                                     <Heart className='inline-block ' />
@@ -103,6 +106,31 @@ export default function NavbarLogin() {
                                 </span>
                             </Link>
 
+                            <div className=' relative   '>
+
+                                <div onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className='lg:text-lg xl:text-2xl items-center flex gap-2 text-primary'>
+                                    <div className='cursor-pointer capitalize  '>notifications</div>
+                                    <Bell className='cursor-pointer ' />
+
+                                    <span className='relative'>
+
+                                        {notificationsList.unreadCount > 0 && (
+                                            <span className="absolute -top-6 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                                {notificationsList.unreadCount}
+                                            </span>
+                                        )}
+                                    </span>
+                                </div>
+
+                                <div className='absolute top-10 right-0'>
+
+                                    {isNotificationsOpen && (
+                                        <NotificationsCard />
+                                    )}
+
+                                </div>
+
+                            </div>
 
 
 
@@ -135,8 +163,8 @@ export default function NavbarLogin() {
                                             <ul className="flex flex-col text-center gap-4">
                                                 <li><Link to="/profile">profile</Link></li>
                                                 <li><a href="#">Settings</a></li>
-                                                <li><a href="#">Reservations</a></li>
                                                 <li><a href="#">My Ads</a></li>
+                                                <li> <button className='cursor-pointer' onClick={() => dispatch(togleCard())} > become a doctor</button> </li>
                                                 <li><a href="#">Need Help?</a></li>
                                             </ul>
                                             <hr className="my-3" />

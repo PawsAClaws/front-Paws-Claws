@@ -28,6 +28,7 @@ import EditProfile from './pages/EditProfile';
 import DoctorDetails from './pages/DoctorDetails';
 import DoctorPage from './pages/DoctorPage';
 import BecomeDoctor from './components/BecomeDoctor';
+import BookingSteps from './components/BookingSteps';
 
 export default function App() {
 
@@ -46,9 +47,10 @@ export default function App() {
         { path: '/about', element: <About /> },
         { path: '*', element: <NotFound /> },
         { path: "/doctors", element: <Doctors /> },
-        { path: "/doctorDetails", element: <DoctorDetails /> },
+        { path: "/doctorDetail/:id", element: <DoctorDetails /> },
         { path: "/doctorPage", element: <DoctorPage /> },
         { path: "/becomeDoctor", element: <BecomeDoctor /> },
+        { path: "/booking", element: <BookingSteps /> },
       ]
     },
 
