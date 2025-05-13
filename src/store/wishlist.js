@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import BASE_URL, { cookies } from "../lib/api";
 
 
 
@@ -9,9 +10,9 @@ import axios from "axios";
 
 export const getAllWishList = createAsyncThunk("wishlist/fetchWishlist", async () => {
 
-    const token = localStorage.getItem("token");
+    const token = cookies.get("token");
 
-    const res = await axios.get("https://backend-online-courses.onrender.com/api/v1/wishlist", {
+    const res = await axios.get(`${BASE_URL}/wishlist`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

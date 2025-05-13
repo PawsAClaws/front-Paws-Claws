@@ -21,7 +21,7 @@ import Terms from './components/Terms ';
 import Policy from './components/Policy';
 import About from './components/About';
 import SearchItems from './pages/SearchItems';
-import MyWishLists from './pages/myWishLists';
+import MyWishLists from './pages/MyWishLists';
 import ForgetPassword from './components/ForgetPassword';
 import ResetPassword from './components/ResetPassword';
 import EditProfile from './pages/EditProfile';

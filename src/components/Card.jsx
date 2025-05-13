@@ -7,6 +7,7 @@ import { toggleItem } from '../store/wishlist';
 import { fetchWishList } from '../lib/WishListApi';
 import { useDispatch } from 'react-redux';
 import { openLoginAlert } from '../store/loginAlertSlice';
+import { cookies } from '../lib/api';
 
 
 export default function Card({ data }) {
@@ -21,7 +22,7 @@ export default function Card({ data }) {
 
 
     function requireLogin(callback) {
-        const token = localStorage.getItem("token");
+        const token = cookies.get("token");
         if (!token) {
             dispatch(openLoginAlert());
         } else {

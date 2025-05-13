@@ -1,11 +1,12 @@
 import { nav } from 'framer-motion/client';
 import React from 'react'
 import { Navigate } from 'react-router-dom'
+import { cookies } from '../../lib/api';
 
 
 const MyToken = () => {
 
-    let token = localStorage.getItem('token');
+    let token = cookies.get('token');
 
     if (token !== null) {
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MapPin, Clock, Star, Money } from 'phosphor-react'
-import BASE_URL from '../lib/api'
+import BASE_URL, { cookies } from '../lib/api'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import docAvatar from '../assets/docAvatar.png'
@@ -18,7 +18,7 @@ const DoctorDetails = () => {
 
     const getDoctorDetails = async () => {
 
-        const token = localStorage.getItem("token");
+        const token = cookies.get("token");
 
         try {
 

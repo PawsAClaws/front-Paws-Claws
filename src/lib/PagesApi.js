@@ -1,10 +1,7 @@
 import axios from "axios";
+import BASE_URL, { cookies } from "./api";
 
-
-
-const BASE_URL = "https://backend-online-courses.onrender.com/api/v1";
-
-const token = localStorage.getItem("token");
+const token = cookies.get("token");
 
 
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { getYear, getMonth, format, set } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import BASE_URL from "../lib/api";
+import BASE_URL, { cookies } from "../lib/api";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -58,7 +58,7 @@ export default function BookingSteps() {
 
     const handleConfirm = async () => {
 
-        const token = localStorage.getItem("token");
+        const token = cookies.get("token");
 
         const data = {
             time: formattedDate,
@@ -98,7 +98,7 @@ export default function BookingSteps() {
 
     return (
 
-        <div className="bg-black bg-black/75 h-screen flex justify-center items-center">
+        <div className="bg-black/75 h-screen flex justify-center items-center">
 
 
             <div className="max-w-lg mx-auto space-y-8 ">

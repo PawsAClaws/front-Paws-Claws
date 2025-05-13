@@ -1,16 +1,11 @@
 import axios from "axios";
-
-
-
-
-const BASE_URL = "https://backend-online-courses.onrender.com/api/v1";
-
+import BASE_URL, { cookies } from "./api";
 
 
 // Get All My Ads
 export const fetchMyAds = async () => {
 
-    const token = localStorage.getItem("token");
+    const token = cookies.get("token");
 
 
     try {
@@ -32,7 +27,7 @@ export const fetchMyAds = async () => {
 
 // Delete My Ad
 export const deleteMyAd = async (id) => {
-    const token = localStorage.getItem("token");
+    const token = cookies.get("token");
 
     try {
 

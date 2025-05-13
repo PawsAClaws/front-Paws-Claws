@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.9",
     "axios": "^1.8.1",
+    "cookie-universal": "^2.2.2",
     "country-state-city": "^3.2.1",
     "date-fns": "^4.1.0",
     "formik": "^2.4.6",
