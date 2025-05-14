@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import History from "../components/History";
 import ReactPaginate from "react-paginate";
 import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
 import Card from "../components/Card";
+import Loading from "../components/Loading";
 
 const itemsPerPage = 24;
 
@@ -12,7 +12,7 @@ export default function Adoption() {
 
     const [currentPage, setCurrentPage] = useState(0);
     const [allAdoptions, setAllAdoptions] = useState([]);
-
+    const [loading, setLoading] = useState(true);
 
     const adoption = "adoption";
 
@@ -34,6 +34,8 @@ export default function Adoption() {
 
             } catch (error) {
                 console.log(error);
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -49,6 +51,7 @@ export default function Adoption() {
     };
 
 
+    { if (loading) return <Loading />; }
 
 
     return (
@@ -57,14 +60,12 @@ export default function Adoption() {
 
 
             <div className="container mx-auto ">
-                {/* History Component */}
-                <div className="pt-[34px]">
-                    <History />
-                </div>
+
+
 
                 {/* Filters and Post Ad */}
 
-                <div className="flex justify-between items-center mt-12">
+                <div className="flex justify-between items-center pt-12">
 
                     <ul className="gap-3 hidden md:flex">
                         <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Price</li>

@@ -14,9 +14,12 @@ export default function Animals() {
     const [allSell, setAllSell] = useState([]);
     const [activeFilter, setActiveFilter] = useState(null);
 
+
     const [filters, setFilters] = useState({
-        price: '',
+        minPrice: '',
+        maxPrice: '',
         country: '',
+        city: '',
         postedAt: ''
     });
 
@@ -26,13 +29,23 @@ export default function Animals() {
     const filteredItems = allSell.filter(item => {
         let isValid = true;
 
+        const itemCountry = item.country?.toLowerCase() || '';
+        const itemCity = item.city?.toLowerCase() || '';
+
         if (filters.country) {
-            const country = item.country?.toLowerCase() || '';
-            isValid = isValid && country.includes(filters.country.toLowerCase());
+            isValid = isValid && itemCountry === filters.country.toLowerCase();
         }
 
-        if (filters.price) {
-            isValid = isValid && item.price <= filters.price;
+        if (filters.city) {
+            isValid = isValid && itemCity === filters.city.toLowerCase();
+        }
+
+        if (filters.minPrice) {
+            isValid = isValid && item.price >= Number(filters.minPrice);
+        }
+
+        if (filters.maxPrice) {
+            isValid = isValid && item.price <= Number(filters.maxPrice);
         }
 
         if (filters.postedAt) {
@@ -42,6 +55,8 @@ export default function Animals() {
 
         return isValid;
     });
+
+
 
 
 
@@ -97,7 +112,7 @@ export default function Animals() {
                 </div>
 
                 {/* Image Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
                     {currentItems.map((item, index) => (
 
                         <Card key={index} data={item} />

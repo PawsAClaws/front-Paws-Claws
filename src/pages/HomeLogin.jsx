@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import Featured from "../components/Featured";
+import Featured from "../components/DoctorsHome";
 import SalePets from "../components/SalePets";
 import AdoptionPets from "../components/AdoptionPets";
 import ShopPets from "../components/ShopPets";

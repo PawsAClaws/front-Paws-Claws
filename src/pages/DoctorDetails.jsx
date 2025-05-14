@@ -62,7 +62,7 @@ const DoctorDetails = () => {
                         </div>
                         <div>
                             <h4 className='text-3xl md:text-5xl lg:text-6xl'> Dr. {doctorDetails.realName}</h4>
-                            <p className='text-lg md:text-xl lg:text-2xl mt-4'> Pet Surgery {doctorDetails.speciality} </p>
+                            <p className='text-lg md:text-xl lg:text-2xl mt-4'> speciality {doctorDetails.speciality} </p>
                         </div>
                     </div>
 

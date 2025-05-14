@@ -30,6 +30,7 @@ import DoctorPage from './pages/DoctorPage';
 import BecomeDoctor from './components/BecomeDoctor';
 import BookingSteps from './components/BookingSteps';
 
+
 export default function App() {
 
 
@@ -56,7 +57,7 @@ export default function App() {
 
     // UserLayout
     {
-      element: <ProutectedRoutes> <UserLayout /></ProutectedRoutes>,
+      element: <UserLayout />,
       children: [
         { path: '/home', element: <HomeLogin /> },
         { path: '/createPost/:id', element: <CreatePost /> },

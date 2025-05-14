@@ -7,6 +7,7 @@ const Location = ({ onCountryChange, onCityChange }) => {
 
 
     const [cities, setCities] = useState([]);
+    const countries = Country.getAllCountries();
 
     const handleChange = (e) => {
         const countryName = e.target.value;

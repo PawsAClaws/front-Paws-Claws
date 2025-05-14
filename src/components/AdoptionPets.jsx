@@ -4,14 +4,16 @@ import { ArrowRight } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
 import Card from "./Card";
 import { Link } from "react-router-dom";
+import Loading from '../components/Loading';
 
 
 
-export default function AdoptionPets(props) {
+export default function AdoptionPets({ data }) {
 
     const adoption = "adoption";
 
     const [allAdoptions, setAllAdoptions] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -25,12 +27,18 @@ export default function AdoptionPets(props) {
 
             } catch (error) {
                 console.log(error);
+            } finally {
+                setLoading(false);
             }
+
+
         }
 
         getAdptionsData();
     }, [])
 
+
+    if (loading) return <Loading />;
 
     return (
         <div className=''>

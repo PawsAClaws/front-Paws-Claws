@@ -88,29 +88,6 @@ export default function SalePets() {
 
                             <Card key={index} data={item} />
 
-                            {/* <div className=' mt-8 max-w-[230px] bg-white rounded-t-2xl'>
-
-                                <img className='w-full' src={img} alt="" />
-
-                                <div className=' py-4 px-4 flex flex-col gap-3'>
-
-                                    <h6> Cute dog for ado.. </h6>
-
-                                    <div className='flex justify-between '>
-
-                                        <div className='flex items-center'>
-                                            <MapPinLine className=' text-primary' />
-                                            <p className='ml-2 text-[10px] opacity-50'>California ( 2,5km )</p>
-                                        </div>
-
-                                        <div className='text-primary'> 100$ </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div> */}
-
                         </SwiperSlide>
 
                     ))

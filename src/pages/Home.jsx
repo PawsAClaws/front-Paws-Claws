@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import imgHome from '../assets/home-img.png'
 import { Package, Heart, House, BriefcaseMedical } from 'lucide-react';
-import { Link, Navigate } from 'react-router-dom';
-import AdoptionPets from '../components/AdoptionPets';
+import { Link } from 'react-router-dom';
 import ShopPets from "../components/ShopPets";
-import Featured from "../components/Featured";
 import SalePets from "../components/SalePets";
-import { useSelector, useDispatch } from 'react-redux';
-import { closeLoginAlert } from '../store/loginAlertSlice';
+import DoctorsHome from '../components/DoctorsHome';
+import AdoptionPets from '../components/AdoptionPets';
+
 
 
 
 
 
 export default function Home() {
+
 
 
     return (
@@ -45,8 +45,6 @@ export default function Home() {
                         </div>
 
                     </div>
-
-
                 </div >
 
                 <div className='bg-[#F9FAFB] pb-20   '>
@@ -101,34 +99,18 @@ export default function Home() {
 
                 </div>
 
+
+
+
                 <AdoptionPets />
 
                 <SalePets />
 
                 <ShopPets />
 
-                <Featured />
+                <DoctorsHome />
 
 
-                {/* {isLoginAlertOpen && (
-                    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 z-50 flex justify-center items-center'>
-                        <div className='bg-white w-[90%] md:w-[50%] p-6 rounded-2xl flex gap-5 items-center justify-center flex-col relative'>
-                            <button className='absolute top-4 right-6 text-2xl' onClick={() => dispatch(closeLoginAlert())}>×</button>
-                            <p className="text-xl font-bold">🚪 You're not logged in</p>
-                            <p>Please log in to access this feature and explore the full experience of Paws&Claws.</p>
-
-                            <Link to="/login" className='bg-primary text-center py-3 px-6 w-full md:w-1/2 text-white rounded-2xl cursor-pointer'>
-                                Log In
-                            </Link>
-
-                            <p>Don't have an account?</p>
-
-                            <Link to="/register" className='bg-primary text-center py-3 px-6 w-full md:w-1/2 text-white rounded-2xl cursor-pointer'>
-                                Sign Up
-                            </Link>
-                        </div>
-                    </div>
-                )} */}
 
 
             </div >

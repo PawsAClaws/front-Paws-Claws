@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { CaretRight } from "phosphor-react";
-
 import { useNavigate } from "react-router-dom";
 import { fetchCategories } from '../lib/categoryApi';
-
+import Loading from "../components/Loading";
 
 
 
@@ -59,7 +58,7 @@ const Categories = () => {
 
 
 
-    if (loading) return <p>Loading...</p>;
+    { if (loading) return <Loading />; }
 
     return (
         <div className='min-h-screen container mx-auto'>

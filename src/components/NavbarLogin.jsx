@@ -236,11 +236,11 @@ export default function NavbarLogin() {
                             </div>
 
                             <div className='px-6 flex flex-col gap-6'>
-                                <a href="/home" className="block ">Home</a>
-                                <a href="/doctors" className="block ">doctors</a>
-                                <a href="/shop" className="block ">shop</a>
-                                <a href="/adoption" className="block ">adoption</a>
-                                <a href="/animals" className="block ">animals</a>
+                                <NavLink to="/home" className="block ">Home</NavLink>
+                                <NavLink to="/doctors" className="block ">doctors</NavLink>
+                                <NavLink to="/shop" className="block ">shop</NavLink>
+                                <NavLink to="/adoption" className="block ">adoption</NavLink>
+                                <NavLink to="/animals" className="block ">animals</NavLink>
                             </div>
 
                         </motion.div>
@@ -260,7 +260,6 @@ export default function NavbarLogin() {
                             <li><NavLink to="animals">Animals</NavLink></li>
                             <li><NavLink to="adoption">Adoption</NavLink></li>
                             <li><NavLink to="shop">shop</NavLink></li>
-                            <li><NavLink to="marketplace">marketplace</NavLink></li>
                             <li><NavLink to="doctors">doctor</NavLink></li>
 
 

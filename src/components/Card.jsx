@@ -63,13 +63,13 @@ export default function Card({ data }) {
                 <div className={`flex justify-center items-center h-full 
                     ${inWishlist ? "text-[#FF4646]" : "text-gray-400"} 
 
-            text-[14px] md:text-[22px] lg:text-[27px]`}>
+            text-[22px]  lg:text-[27px]`}>
 
                     <Heart weight={inWishlist ? "fill" : "regular"} />
                 </div>
             </div>
 
-            <div className=' w-full md:w-full h-[150px] md:h-[200px] '>
+            <div className=' w-full md:w-full h-[300px] '>
                 <img src={data.photo} alt={data.title} className="w-full h-full object-cover" />
             </div>
 
