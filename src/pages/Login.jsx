@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import login from '../assets/login.png'
 import logo from '../assets/logo.png'
 import { Globe, Question, Eye, EyeSlash } from "phosphor-react";
@@ -7,14 +7,15 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup'
 import axios from 'axios';
 import { useFormik } from 'formik'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import BASE_URL, { cookies } from '../lib/api';
 
 
 
 
 
 export default function Login() {
-
+   const [search,setSearch] = useSearchParams()
 
     let [errorMsg, setErrorMsg] = useState()
     let navigate = useNavigate()
@@ -24,7 +25,7 @@ export default function Login() {
 
     async function sendLoginData(values) {
 
-        axios.post('https://backend-online-courses.onrender.com/api/v1/auth/login', values).then(({ data }) => {
+        axios.post(`${BASE_URL}/auth/login`, values).then(({ data }) => {
 
             console.log(data);
 
@@ -32,7 +33,9 @@ export default function Login() {
             if (data.message == "login success") {
 
                 toast.success("login success")
-                localStorage.setItem('token', data?.data?.token)
+                const date = new Date()
+                date.setDate(date.getDate()+1)
+                cookies.set('token', data?.data?.token, { expires: date });
                 navigate('/home')
             }
 
@@ -73,6 +76,14 @@ export default function Login() {
         }
     })
 
+    useEffect(()=>{
+        if(search.get("token")){
+            const date = new Date()
+            date.setDate(date.getDate()+1)
+            cookies.set("token",search.get("token"),{expires: date})
+            navigate("/home")
+        }
+    },[search])
 
 
 
@@ -169,7 +180,7 @@ export default function Login() {
 
                     <div className='flex justify-center items-center flex-col   '>
                         <div className='w-[70%] h-[1px] bg-[#E5E5E5] mb-10'></div>
-                        <button className='bg-[#333333] py-2.5 outline-t cursor-pointer  border-[#F2F2F2] rounded-2xl w-[70%] text-white'> <span><img className='inline-block mr-1' src={google} alt="" /></span>  Or Continue with Google </button>
+                        <Link to={`${BASE_URL}/auth/google`} className='bg-[#333333] py-2.5 outline-t cursor-pointer  border-[#F2F2F2] rounded-2xl w-[70%] text-white text-center'> <span><img className='inline-block mr-1' src={google} alt="" /></span>  Or Continue with Google </Link>
                     </div>
 
                     <div className='text-center'> Dont have an account? <span> <Link className='text-primary' to="/register"> Sign up </Link></span> </div>

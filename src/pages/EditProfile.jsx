@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Camera } from "phosphor-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../store/getUserSlice.js';
+import BASE_URL, { cookies } from '../lib/api.js';
 
 const EditProfile = () => {
 
@@ -21,7 +22,7 @@ const EditProfile = () => {
 
     const handleData = async (values) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = cookies.get('token');
 
             const formData = new FormData();
 
@@ -36,7 +37,7 @@ const EditProfile = () => {
             }
 
             const response = await axios.put(
-                'https://backend-online-courses.onrender.com/api/v1/user',
+                `${BASE_URL}/user`,
                 formData,
                 {
                     headers: {

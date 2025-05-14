@@ -4,7 +4,7 @@ import avatar from '../assets/avatar.png'
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotifications } from '../store/notificationsSlice';
 import { useEffect } from 'react';
-import BASE_URL from '../lib/api';
+import BASE_URL, { cookies } from '../lib/api';
 import axios from 'axios';
 import { markAllAsRead } from '../store/notificationsSlice';
 
@@ -25,7 +25,7 @@ const NotificationsCard = () => {
     const readNotifications = notificationsList?.list.filter(n => n.isReead);
 
 
-    const token = localStorage.getItem("token");
+    const token = cookies.get("token");
 
     async function handleMarkAllAsRead() {
 

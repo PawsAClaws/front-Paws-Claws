@@ -7,10 +7,10 @@ import 'react-phone-number-input/style.css'
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { fetchCategoryById } from '../lib/categoryApi';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import Location from '../lib/location'
+import { fetchCategoryById } from '../lib/categoryApi';
+import BASE_URL, { cookies } from '../lib/api';
 
 
 
@@ -68,9 +68,9 @@ export default function CreatePost() {
 
         try {
 
-            const token = localStorage.getItem("token");
+            const token = cookies.get("token");
 
-            const res = await axios.post(' https://backend-online-courses.onrender.com/api/v1/post', formData, {
+            const res = await axios.post(`${BASE_URL}/post`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`

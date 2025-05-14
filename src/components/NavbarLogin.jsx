@@ -14,6 +14,7 @@ import MobileNav from './nav/MobileNav.jsx';
 import { togleCard } from '../store/becomeDoctorSlice.js';
 import NotificationsCard from './NotificationsCard.jsx';
 import { fetchNotifications } from '../store/notificationsSlice.js';
+import { cookies } from '../lib/api.js';
 
 
 
@@ -40,7 +41,7 @@ export default function NavbarLogin() {
 
     function handleSignOut() {
 
-        localStorage.removeItem('token')
+        cookies.remove('token')
         navigate('/login')
 
     }

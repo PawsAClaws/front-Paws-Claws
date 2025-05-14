@@ -3,7 +3,7 @@ import Filter from '../components/Filter'
 import ReactPaginate from "react-paginate";
 import DoctorsCard from '../components/DoctorsCard'
 import { CaretRight, CaretLeft } from "phosphor-react";
-import BASE_URL from '../lib/api';
+import BASE_URL, { cookies } from '../lib/api';
 import axios from 'axios';
 
 
@@ -17,7 +17,7 @@ const Doctors = () => {
 
     const getDoctorsData = async () => {
 
-        const token = localStorage.getItem("token");
+        const token = cookies.get("token");
 
         try {
 

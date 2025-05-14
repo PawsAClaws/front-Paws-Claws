@@ -1,7 +1,7 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import BASE_URL from '../lib/api';
+import BASE_URL, { cookies } from '../lib/api';
 
 
 
@@ -12,7 +12,7 @@ export const fetchNotifications = createAsyncThunk(
 
     async () => {
 
-        const token = localStorage.getItem("token");
+        const token = cookies.get("token");
 
         const response = await axios.get(`${BASE_URL}/notification`, {
             headers: {

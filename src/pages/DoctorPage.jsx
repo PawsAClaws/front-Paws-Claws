@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { date } from 'yup'
 import avatar from '../assets/avatar.png'
 import { X, HourglassMedium, Check, Trash } from 'phosphor-react'
-import BASE_URL from '../lib/api'
+import BASE_URL, { cookies } from '../lib/api'
 import axios from 'axios'
 
 
@@ -32,7 +32,7 @@ const DoctorPage = () => {
 
     const managingDoctorRequst = async () => {
 
-        const token = localStorage.getItem("token");
+        const token = cookies.get("token");
         try {
             const res = await axios.get(`${BASE_URL}/appointment/doctor/3`, {
                 headers: {
@@ -53,7 +53,7 @@ const DoctorPage = () => {
 
         try {
 
-            const token = localStorage.getItem("token");
+            const token = cookies.get("token");
 
             const res = await axios.put(`${BASE_URL}/appointment/${id}`,
                 { status },

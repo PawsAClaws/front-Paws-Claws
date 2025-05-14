@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import BASE_URL, { cookies } from "../lib/api";
 
 
 
@@ -7,9 +8,9 @@ import axios from "axios";
 
 export const getUserData = createAsyncThunk("users/fetchUsers", async () => {
 
-    const token = localStorage.getItem("token");
+    const token = cookies.get("token");
 
-    const res = await axios.get("https://backend-online-courses.onrender.com/api/v1/user", {
+    const res = await axios.get(`${BASE_URL}/user`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

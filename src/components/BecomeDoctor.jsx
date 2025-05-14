@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { togleCard } from '../store/becomeDoctorSlice';
 import { useFormik } from 'formik';
 import axios from 'axios';
-import baseUrl from '../lib/api';
+import baseUrl, { cookies } from '../lib/api';
 import * as yup from 'yup'
 import { toast } from 'react-toastify';
 
@@ -61,7 +61,7 @@ const BecomeDoctor = () => {
 
 
     async function handleDoctorData(values) {
-        const token = localStorage.getItem('token');
+        const token = cookies.get('token');
 
         const startFormatted = formatTo12Hour(values.startTimeWork);
         const endFormatted = formatTo12Hour(values.endTimeWork);
