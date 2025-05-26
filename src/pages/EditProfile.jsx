@@ -5,6 +5,7 @@ import { Camera } from "phosphor-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../store/getUserSlice.js';
 import BASE_URL, { cookies } from '../lib/api.js';
+import avatar from '../assets/avatar.png';
 
 const EditProfile = () => {
 
@@ -84,7 +85,7 @@ const EditProfile = () => {
 
                         <div className='relative group w-[100px] h-[100px] md:h-[170px] md:w-[170px] rounded-full overflow-hidden mt-[-50px]'>
                             <img
-                                src={selectedFile ? URL.createObjectURL(selectedFile) : userData?.photo}
+                                src={selectedFile ? URL.createObjectURL(selectedFile) : userData?.photo ? userData.photo : avatar}
                                 alt="Profile"
                                 className="w-full h-full object-cover"
                             />

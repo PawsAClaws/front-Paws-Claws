@@ -51,10 +51,10 @@ export default function ShopPets() {
                             slidesPerView: 1,
                         },
                         400: {
-                            slidesPerView: 2,
+                            slidesPerView: 1,
                         },
                         639: {
-                            slidesPerView: 3,
+                            slidesPerView: 2,
                         },
                         865: {
                             slidesPerView: 3
@@ -63,7 +63,7 @@ export default function ShopPets() {
                             slidesPerView: 3
                         },
                         1500: {
-                            slidesPerView: 4
+                            slidesPerView: 5
                         },
                         1700: {
                             slidesPerView: 5
@@ -73,7 +73,7 @@ export default function ShopPets() {
 
                     {allShop.map((item, index) => (
 
-                        <SwiperSlide key={index} className='max-w-[300px]' >
+                        <SwiperSlide key={index} className='max-w-[430px]' >
 
                             <Card key={index} data={item} />
 

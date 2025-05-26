@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import doc1 from '../assets/doc1.png';
-import doc2 from '../assets/doc2.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Star, ArrowRight } from "phosphor-react";
 import 'swiper/css';
 import { fetchDeoctors } from '../lib/PagesApi';
+import { Link } from 'react-router-dom';
 
 export default function DoctorsHome() {
 
@@ -40,18 +39,37 @@ export default function DoctorsHome() {
         <div className='container mx-auto pb-16'>
 
             <div className='flex justify-between items-center mt-9 mb-5'>
-                <h3 className='text-3xl  text-center'> doctors </h3>
-                <p className='text-primary cursor-pointer text-2xl'>See All <ArrowRight className='inline-block ' /></p>
+                <h3 className='text-xl md:text-3xl font-bold capitalize'> doctors </h3>
+                <Link to="/doctors" className='text-primary cursor-pointer text-2xl'>See All <ArrowRight className='inline-block ' /></Link>
             </div>
 
             <Swiper
-                spaceBetween={-30}
+                className='swiper-w'
+                spaceBetween={10}
+                slidesPerView={6}
                 breakpoints={{
-                    768: {
-                        spaceBetween: 20,
+                    0: {
+                        slidesPerView: 1,
                     },
+                    400: {
+                        slidesPerView: 1,
+                    },
+                    639: {
+                        slidesPerView: 2,
+                    },
+                    865: {
+                        slidesPerView: 3
+                    },
+                    1000: {
+                        slidesPerView: 3
+                    },
+                    1500: {
+                        slidesPerView: 5
+                    },
+                    1700: {
+                        slidesPerView: 5
+                    }
                 }}
-
             >
 
 
@@ -60,11 +78,11 @@ export default function DoctorsHome() {
 
                     {allDoctorsHome.map((doc, index) => (
 
-                        <SwiperSlide key={index} className=' max-w-[300px] md:max-w-[400px]  '>
+                        <SwiperSlide key={index} className=' max-w-[430px]  '>
 
-                            <div className='w-[250px] h-[320px] md:w-[400px] mt-9 md:h-[400px]  overflow-hidden  rounded-lg relative'>
+                            <div className=' mt-9 w-full h-full  overflow-hidden  rounded-lg relative'>
 
-                                <img className='w-full h-1/2 rounded-t-lg' src={doc.card} alt="" />
+                                <img className='w-full h-[300px] rounded-t-lg' src={doc.card} alt={doc.realName} />
 
                                 <div className='flex flex-col gap-4  px-4 pt-4 pb-2 border rounded-b-lg border-[#E5E7EB] '>
 

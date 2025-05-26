@@ -11,7 +11,8 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { fetchCategoryById } from '../lib/categoryApi';
 import BASE_URL, { cookies } from '../lib/api';
-
+import Loading from "../components/Loading";
+import Location from '../lib/Location';
 
 
 
@@ -19,8 +20,9 @@ export default function CreatePost() {
 
 
 
-    const [categoriesId, setCategoriesId] = useState([]);
+    const [categoriesId, setCategoriesId] = useState({});
 
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
 
@@ -39,19 +41,25 @@ export default function CreatePost() {
             } catch (error) {
 
                 console.log(error);
-
+            }
+            finally {
+                setIsLoading(false);
             }
 
         }
 
+
         getIdData();
+
 
     }, [])
 
 
+    console.log(categoriesId);
 
 
-    async function handkeCreatePost(values) {
+
+    async function handleCreatePost(values) {
 
         const formData = new FormData();
         formData.append('title', values.title);
@@ -62,9 +70,15 @@ export default function CreatePost() {
         formData.append('age', values.age);
         formData.append('photo', values.photo);
         formData.append('weight', values.weight);
+        formData.append('negotiable', values.negotiable);
         formData.append('country', values.country);
         formData.append('city', values.city);
-        formData.append('categoryId', values.categoryId);
+        if (values.categoryId) {
+            formData.append('categoryId', values.categoryId);
+        } else {
+            console.error("categoryId is missing", values.categoryId);
+        }
+
 
         try {
 
@@ -110,28 +124,33 @@ export default function CreatePost() {
 
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
             title: '',
             description: '',
             price: '0',
             type: 'sale',
-            gender: '',
-            age: '',
+            gender: 'male',
+            age: '1',
             photo: null,
-            weight: '',
+            weight: '0',
             country: '',
             city: '',
-            categoryId: categoriesId?.id || '6',
+            categoryId: '5',
+            negotiable: false,
         },
 
         validationSchema,
         onSubmit: (values) => {
 
             console.log(values);
-            handkeCreatePost(values)
+            handleCreatePost(values)
 
         }
     });
+
+
+    if (isLoading || !categoriesId?.id) return <Loading />;
 
 
 
@@ -163,7 +182,7 @@ export default function CreatePost() {
                                     </div>
                                 </Link>
 
-                                <div className="bg-[#EFEFEF] px-2 flex justify-around items-center w-[30%]  rounded-[90px] mt-3.5">
+                                <div className="bg-[#EFEFEF] px-2 flex justify-around items-center  w-[60%] md:w-[30%]  rounded-[90px] mt-3.5">
 
                                     {["sale", "adoption", "shop"].map((type) => (
                                         <div
@@ -218,7 +237,7 @@ export default function CreatePost() {
                             )}
                         </div>
 
-                        <div className='flex justify-between gap-7 mt-8 md:w-[50%]'>
+                        <div className={`flex justify-between gap-7 mt-8 md:w-[50%] ${formik.values.type === 'shop' ? 'hidden' : ''}`}>
 
                             <div className='flex flex-col mb-4'>
                                 <label htmlFor="gender"> Gender </label>
@@ -240,18 +259,18 @@ export default function CreatePost() {
                                 )}
                             </div>
 
-                            <div className='flex flex-col mb-4'>
+                            <div className='flex flex-col mb-4 '>
                                 <label htmlFor="age"> Age </label>
-                                <input onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.age} className='border max-w-[150px]  p-2.5 border-[#828282] bg-white rounded-sm' type="number" name="age" id="age" placeholder='Enter age' />
+                                <input onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.age} className='border w-full sm:max-w-[150px]  p-2.5 border-[#828282] bg-white rounded-sm' type="number" name="age" id="age" placeholder='Enter age' />
                                 {formik.touched.age && formik.errors.age && (
                                     <p className="text-red-500 text-center text-sm mt-1">{formik.errors.age}</p>
                                 )}
                             </div>
 
 
-                            <div className='flex flex-col mb-4'>
+                            <div className='flex flex-col mb-4 '>
                                 <label htmlFor="weight"> Weight </label>
-                                <input onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.weight} className='border p-2.5 max-w-[150px]  border-[#828282] bg-white rounded-sm' type="number" name="weight" id="weight" placeholder='Enter in KG' />
+                                <input onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.weight} className='border p-2.5 w-full sm:max-w-[150px] border-[#828282] bg-white rounded-sm' type="number" name="weight" id="weight" placeholder='Enter in KG' />
                                 {formik.touched.weight && formik.errors.weight && (
                                     <p className="text-red-500 text-center text-sm mt-1">{formik.errors.weight}</p>
                                 )}
@@ -270,6 +289,7 @@ export default function CreatePost() {
                                     <p className="text-red-500 text-center text-sm mt-1">{formik.errors.title}</p>
                                 )}
                             </div>
+
 
                             <div className='flex flex-col pb-4 w-full md:w-[40%]'>
                                 <label htmlFor="country"> Location </label>
@@ -341,18 +361,30 @@ export default function CreatePost() {
                             )}
                         </div>
 
-                        <div className='flex gap-7'>
-                            <div className='text-[#929292]'>
-                                <input type="checkbox" name="" id="" />
-                                <label htmlFor=""> Negotiable</label>
-
+                        <div className='flex gap-7 mt-4'>
+                            <div className='text-[#929292] flex items-center gap-2'>
+                                <input
+                                    type="radio"
+                                    id="negotiable"
+                                    name="negotiable"
+                                    checked={formik.values.negotiable === true}
+                                    onChange={() => formik.setFieldValue("negotiable", true)}
+                                />
+                                <label htmlFor="negotiable">Negotiable</label>
                             </div>
-                            <div className='text-[#929292]'>
-                                <input type="checkbox" name="" id="" />
-                                <label htmlFor=""> Not negotiable </label>
-                            </div>
 
+                            <div className='text-[#929292] flex items-center gap-2'>
+                                <input
+                                    type="radio"
+                                    id="not-negotiable"
+                                    name="negotiable"
+                                    checked={formik.values.negotiable === false}
+                                    onChange={() => formik.setFieldValue("negotiable", false)}
+                                />
+                                <label htmlFor="not-negotiable">Not negotiable</label>
+                            </div>
                         </div>
+
 
 
                         <div className='flex justify-center mt-12'>

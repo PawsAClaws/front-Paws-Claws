@@ -4,6 +4,7 @@ import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
 import Card from "../components/Card";
 import Filter from "../components/Filter";
+import Loading from "../components/Loading";
 
 const itemsPerPage = 24;
 
@@ -13,6 +14,7 @@ export default function Animals() {
 
     const [allSell, setAllSell] = useState([]);
     const [activeFilter, setActiveFilter] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
 
     const [filters, setFilters] = useState({
@@ -79,6 +81,9 @@ export default function Animals() {
             } catch (error) {
                 console.log(error);
             }
+            finally {
+                setIsLoading(false);
+            }
         }
 
         getSellData();
@@ -89,6 +94,7 @@ export default function Animals() {
     };
 
 
+    { if (isLoading) return <Loading />; }
 
 
     return (

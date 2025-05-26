@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import myImg from '../assets/pic8.png'
 import { Eye, Heart, ShareNetwork, Flag, MapPinLine } from "phosphor-react";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Pets from '../components/AdoptionPets';
 import avatar from '../assets/avatar.png'
 import { fetchPostDetails } from '../lib/postsApi';
+// import { handleStartChat } from './chat/handleFirstChat';
 
-const PostDetails = () => {
+
+
+
+
+
+const PostDetails = ({ post }) => {
 
 
     const [postDetails, setPostDetails] = useState([])
 
+    const postOwnerId = postDetails.userId;
+
     const { id } = useParams()
+    const navigate = useNavigate();
+
+
+
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -23,28 +34,22 @@ const PostDetails = () => {
 
 
     useEffect(() => {
-
         const getPostDetails = async () => {
-
             try {
-
                 const data = await fetchPostDetails(id)
-
                 setPostDetails(data?.data)
                 console.log(data.data);
-
-
-
             } catch (error) {
                 console.log(error);
             }
-
-
         }
-
         getPostDetails()
 
     }, [])
+
+
+
+
 
 
     return (
@@ -54,11 +59,8 @@ const PostDetails = () => {
             <div>
 
                 <div className='flex justify-center mt-16'>
-                    <img className='w-1/2' src={postDetails.photo} alt={postDetails.title} />
+                    <img className='w-1/2' src={postDetails.photo ? postDetails.photo : avatar} alt={postDetails.title} />
                 </div>
-
-
-
                 <div className='  md:h-[200px]  mt-8 flex justify-between flex-col'>
 
                     <div className='flex justify-between  '>
@@ -76,16 +78,14 @@ const PostDetails = () => {
                             <p className='ml-2 text-sm opacity-50'> {postDetails.country} ( {postDetails.city} ) </p>
                         </div>
 
-                        <div className='bg-[#FBF0E7] p-3 w-[120px] text-center'> Negotiable </div>
+                        <div className='bg-[#FBF0E7] p-3  text-center w-fit'> {postDetails.negotiable ? 'Negotiable' : 'Not Negotiable'} </div>
 
                     </div>
 
                 </div>
-
-
                 <div className=' lg:flex justify-between items-center'>
 
-                    <div className="bg-[#EFEFEF] mt-20  py-4 flex justify-around items-center text-center lg:w-1/2 w-full">
+                    <div className={`bg-[#EFEFEF] mt-20  py-4 flex justify-around items-center text-center lg:w-1/2 w-full ${postDetails.type == 'shop' ? 'hidden' : ''}`}>
 
                         <div> <span className='md:text-xl'>Gender :  {postDetails.gender} </span> </div>
 
@@ -99,14 +99,11 @@ const PostDetails = () => {
 
                     </div>
 
-                    <div className='text-end mt-10 lg:w-1/2 text-[#606060]'>
+                    <div className='text-end mt-10 lg:w-1/2 text-[#606060] text-2xl'>
                         {postDetails.createdAt ? formatDate(postDetails.createdAt) : ''}
                     </div>
 
                 </div>
-
-
-
                 <div className='h-[1px] mt-16 mb-8 bg-[#C2C2C2]'></div>
 
                 <div className='flex flex-col gap-4 w-full lg:w-1/2 md:w-[90%]'>
@@ -114,9 +111,7 @@ const PostDetails = () => {
                     <h6 className='text-2xl'> Description </h6>
                     <p> {postDetails.description} </p>
                 </div>
-
                 <div className='h-[1px] mt-16 mb-8 bg-[#C2C2C2]'></div>
-
                 <div className='h-[200px]'>
 
                     <div className='text-2xl mb-5'> listed by : </div>
@@ -136,11 +131,7 @@ const PostDetails = () => {
                                 <p className='text-[#878787] text-[12px] md:text-[16px] lg:text-[24px] '> member since 2025 </p>
                                 <Link to={'/profile'} className='text-primary' > View profile   </Link>
                             </div>
-
-
                         </div>
-
-
                         <div className='flex justify-between flex-col gap-5 '>
 
 
@@ -173,33 +164,15 @@ const PostDetails = () => {
                                     <span> Report </span>
                                 </div>
                             </div>
-
-
                         </div>
-
-
-
                     </div>
-
-
                 </div>
-
                 <div className='h-[1px] mt-5 md:mt-8 mb-8 bg-[#C2C2C2]'></div>
-
-
                 <div>
-
-
-
                     <Pets />
-
                 </div>
-
-
                 <div className='h-[1px] mt-16 mb-8 bg-[#C2C2C2]'></div>
-
                 <div className='mb-[100px]'>
-
                     <div className='mb-[18px] text-2xl'> Your safety matters to us! </div>
                     <ul className='list-disc list-inside text-xl text-[#707070]'>
                         <li> Only meet in public / crowded places </li>
@@ -212,9 +185,19 @@ const PostDetails = () => {
 
                 <div className='flex gap-10 text-center mb-[10%] text-white '>
 
-                    <div className='w-1/3 bg-primary py-8 rounded-[11px] cursor-pointer'>  Chat </div>
-                    <div className='w-1/3 bg-black py-8 rounded-[11px] cursor-pointer'>  SMS </div>
-                    <div className='w-1/3 bg-green-500 py-8 rounded-[11px] cursor-pointer'>  call </div>
+                    {postDetails.userId ? (
+
+                        <Link to={`/chatRoom/${postDetails.userId}`} className='w-1/3 bg-primary py-8 rounded-[11px] cursor-pointer'>  Chat </Link>
+
+                    ) : (
+                        <button className='w-1/3 bg-primary py-8 rounded-[11px] cursor-pointer'>  Chat </button>
+                    )}
+
+
+                    {/* onClick={() => handleStartChat(postOwnerId, navigate)} */}
+
+                    <button className='w-1/3 bg-black py-8 rounded-[11px] cursor-pointer'>  SMS </button>
+                    <button className='w-1/3 bg-green-500 py-8 rounded-[11px] cursor-pointer'>  call </button>
 
 
                 </div>

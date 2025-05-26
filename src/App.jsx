@@ -1,7 +1,6 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router-dom';
 import React from 'react';
 import GuestLayout from './components/layout/GuestLayout';
-import UserLayout from './components/layout/UserLayout';
 import Home from './pages/Home';
 import HomeLogin from './pages/HomeLogin';
 import Login from './pages/Login';
@@ -15,7 +14,6 @@ import CreatePost from './pages/CreatePost';
 import PostDetails from './pages/PostDetails';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
-import ProutectedRoutes from './components/protectedRoutes/ProutectedRoutes';
 import { ToastContainer } from 'react-toastify';
 import Terms from './components/Terms ';
 import Policy from './components/Policy';
@@ -29,10 +27,19 @@ import DoctorDetails from './pages/DoctorDetails';
 import DoctorPage from './pages/DoctorPage';
 import BecomeDoctor from './components/BecomeDoctor';
 import BookingSteps from './components/BookingSteps';
+import DoctorMap from './pages/DoctorMap';
+import Chat from './pages/Chat';
+import Loading from './components/Loading';
+import ChatRoom from './pages/chat/ChatRoom';
+// import ChatList from './pages/chat/ChatList';
+import ChatComponent from './pages/ChatTest';
+
+
+
+
 
 
 export default function App() {
-
 
 
 
@@ -40,60 +47,79 @@ export default function App() {
 
     // GuestLayout
     {
-      element: <GuestLayout />,
+      path: '/', element: <GuestLayout />,
       children: [
-        { path: '/', element: <Home /> },
-        { path: '/terms', element: <Terms /> },
-        { path: '/policy', element: <Policy /> },
-        { path: '/about', element: <About /> },
+        { index: true, element: <Home /> },
+        { path: 'home', element: <HomeLogin /> },
+
+        { path: 'terms', element: <Terms /> },
+        { path: 'policy', element: <Policy /> },
+        { path: 'about', element: <About /> },
+        { path: 'createPost/:id', element: <CreatePost /> },
+        { path: 'postDetails/:id', element: <PostDetails /> },
+        { path: 'adoption', element: <Adoption /> },
+        { path: 'animals', element: <Animals /> },
+        { path: 'doctors', element: <Doctors /> },
+        { path: 'shop', element: <Shop /> },
+        { path: 'categories', element: <Categories /> },
+        { path: 'profile', element: <Profile /> },
+        { path: "search", element: <SearchItems /> },
+        { path: "myWishlist", element: <MyWishLists /> },
+        { path: "editProfile", element: <EditProfile /> },
+        { path: "doctors", element: <Doctors /> },
+        { path: "doctorDetail/:id", element: <DoctorDetails /> },
+        { path: "doctorPage", element: <DoctorPage /> },
+        { path: "becomeDoctor", element: <BecomeDoctor /> },
+        { path: "booking", element: <BookingSteps /> },
+        { path: "doctorMap", element: <DoctorMap /> },
+        { path: "chat", element: <ChatComponent /> },
+
+
+
+        { path: "chatRoom", element: <ChatRoom /> },
+        // { path: "chatList", element: <ChatList /> },
+
+
+
+
+
+
+
+
         { path: '*', element: <NotFound /> },
-        { path: "/doctors", element: <Doctors /> },
-        { path: "/doctorDetail/:id", element: <DoctorDetails /> },
-        { path: "/doctorPage", element: <DoctorPage /> },
-        { path: "/becomeDoctor", element: <BecomeDoctor /> },
-        { path: "/booking", element: <BookingSteps /> },
       ]
     },
 
     // UserLayout
-    {
-      element: <UserLayout />,
-      children: [
-        { path: '/home', element: <HomeLogin /> },
-        { path: '/createPost/:id', element: <CreatePost /> },
-        { path: '/postDetails/:id', element: <PostDetails /> },
-        { path: '/adoption', element: <Adoption /> },
-        { path: '/animals', element: <Animals /> },
-        { path: '/doctors', element: <Doctors /> },
-        { path: '/shop', element: <Shop /> },
-        { path: '/categories', element: <Categories /> },
-        { path: '/profile', element: <Profile /> },
-        { path: "/search", element: <SearchItems /> },
-        { path: "/myWishlist", element: <MyWishLists /> },
-        { path: "/editProfile", element: <EditProfile /> },
+    // {
+    //   element: <UserLayout />,
+    //   children: [
+    //     { path: '/home', element: <HomeLogin /> },
 
-      ]
-    },
+    //   ]
+    // },
 
 
     {
-      path: '/login', element: <Login />
+      path: 'login', element: <Login />
     },
     {
-      path: '/register', element: <Register />
+      path: 'register', element: <Register />
     },
     {
-      path: '/forgetPassword', element: <ForgetPassword />
+      path: 'forgetPassword', element: <ForgetPassword />
     },
     {
-      path: '/resetPassword/:token', element: <ResetPassword />
+      path: 'resetPassword/:token', element: <ResetPassword />
     },
 
   ]);
 
   return (
     <div className='font-Quicksand'>
+
       <RouterProvider router={routes} />
+
       <ToastContainer theme='colored' autoClose={1200} />
     </div>
   );

@@ -48,7 +48,7 @@ export default function AdoptionPets({ data }) {
 
                 <div className='flex justify-between items-center mt-9 mb-5'>
 
-                    <h3 className="text-3xl  "> Pets for sale Adoption  </h3>
+                    <h3 className=" text-xl md:text-3xl font-bold"> Pets for  Adoption  </h3>
                     <Link to="/adoption" className='text-primary cursor-pointer text-2xl'>See All <ArrowRight className='inline-block ' /></Link>
 
                 </div>
@@ -62,29 +62,29 @@ export default function AdoptionPets({ data }) {
                             slidesPerView: 1,
                         },
                         400: {
-                            slidesPerView: 2,
+                            slidesPerView: 1,
                         },
                         639: {
-                            slidesPerView: 3,
+                            slidesPerView: 2,
                         },
                         865: {
                             slidesPerView: 3
                         },
                         1000: {
-                            slidesPerView: 5
+                            slidesPerView: 3
                         },
                         1500: {
-                            slidesPerView: 6
+                            slidesPerView: 5
                         },
                         1700: {
-                            slidesPerView: 6
+                            slidesPerView: 5
                         }
                     }}
                 >
 
                     {allAdoptions.map((item, index) => (
 
-                        <SwiperSlide key={index} className='max-w-[230px]' >
+                        <SwiperSlide key={index} className='max-w-[430px]' >
 
                             <Card key={index} data={item} />
 

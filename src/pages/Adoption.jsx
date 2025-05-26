@@ -4,6 +4,8 @@ import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
 import Card from "../components/Card";
 import Loading from "../components/Loading";
+import Filter from "../components/Filter";
+
 
 const itemsPerPage = 24;
 
@@ -12,13 +14,53 @@ export default function Adoption() {
 
     const [currentPage, setCurrentPage] = useState(0);
     const [allAdoptions, setAllAdoptions] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeFilter, setActiveFilter] = useState(null);
+    const [filters, setFilters] = useState({
+        minPrice: '',
+        maxPrice: '',
+        country: '',
+        city: '',
+        postedAt: ''
+    });
 
     const adoption = "adoption";
 
+    const filteredItems = allAdoptions.filter(item => {
+        let isValid = true;
+
+        const itemCountry = item.country?.toLowerCase() || '';
+        const itemCity = item.city?.toLowerCase() || '';
+
+        if (filters.country) {
+            isValid = isValid && itemCountry === filters.country.toLowerCase();
+        }
+
+        if (filters.city) {
+            isValid = isValid && itemCity === filters.city.toLowerCase();
+        }
+
+        if (filters.minPrice) {
+            isValid = isValid && item.price >= Number(filters.minPrice);
+        }
+
+        if (filters.maxPrice) {
+            isValid = isValid && item.price <= Number(filters.maxPrice);
+        }
+
+        if (filters.postedAt) {
+            const itemDate = new Date(item.createdAt).toISOString().split('T')[0];
+            isValid = isValid && itemDate === filters.postedAt;
+        }
+
+        return isValid;
+    });
+
     const offset = currentPage * itemsPerPage;
-    const currentItems = allAdoptions.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(allAdoptions.length / itemsPerPage);
+    const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
+
+
 
 
 
@@ -35,7 +77,7 @@ export default function Adoption() {
             } catch (error) {
                 console.log(error);
             } finally {
-                setLoading(false);
+                setIsLoading(false);
             }
         }
 
@@ -51,7 +93,7 @@ export default function Adoption() {
     };
 
 
-    { if (loading) return <Loading />; }
+    { if (isLoading) return <Loading />; }
 
 
     return (
@@ -62,22 +104,8 @@ export default function Adoption() {
             <div className="container mx-auto ">
 
 
+                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} filters={filters} setFilters={setFilters} />
 
-                {/* Filters and Post Ad */}
-
-                <div className="flex justify-between items-center pt-12">
-
-                    <ul className="gap-3 hidden md:flex">
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Price</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Location</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Posted at</li>
-                        <li className="bg-[#FBF0E7] rounded-[22px] px-4 py-3">Clear All</li>
-                    </ul>
-
-                    <button className="bg-[#FEA230] text-white rounded-lg px-4 py-[18px]">
-                        Post your ad
-                    </button>
-                </div>
 
                 {/* Sort Section */}
                 <div className="flex justify-between items-center my-8">
@@ -89,9 +117,9 @@ export default function Adoption() {
 
                 {/* Image Grid */}
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
 
-                    {allAdoptions.map((item, index) => (
+                    {currentItems.map((item, index) => (
 
                         <Card key={index} data={item} />
 

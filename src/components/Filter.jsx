@@ -41,7 +41,7 @@ const Filter = ({ activeFilter, setActiveFilter, filters, setFilters }) => {
                         className="bg-[#FBF0E7] rounded-[22px] px-4 py-3 cursor-pointer"
                         onClick={() => {
                             setActiveFilter(null);
-                            setFilters({ minPrice: '', maxPrice: '', location: '', postedAt: '' });
+                            setFilters({ minPrice: '', maxPrice: '', country: '', city: '', postedAt: '' });
                         }}
                     >
                         Clear All
@@ -192,9 +192,7 @@ const Filter = ({ activeFilter, setActiveFilter, filters, setFilters }) => {
 
 
 
-            <Link to="/categories" className="bg-[#FEA230] cursor-pointer text-white rounded-lg px-4 py-[18px]">
-                Post your ad
-            </Link>
+
 
         </div>
     )

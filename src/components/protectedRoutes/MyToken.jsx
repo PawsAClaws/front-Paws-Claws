@@ -1,30 +1,30 @@
-import { nav } from 'framer-motion/client';
-import React from 'react'
-import { Navigate } from 'react-router-dom'
-import { cookies } from '../../lib/api';
+// import { nav } from 'framer-motion/client';
+// import React from 'react'
+// import { Navigate } from 'react-router-dom'
+// import { cookies } from '../../lib/api';
 
 
-const MyToken = () => {
+// const MyToken = () => {
 
-    let token = cookies.get('token');
+//     let token = cookies.get('token');
 
-    if (token !== null) {
+//     if (token !== null) {
 
-        return <Navigate to="/home" />
+//         return <Navigate to="/home" />
 
-    } else {
-
-
-    }
+//     } else {
 
 
+//     }
 
 
-    return (
-        <div>
 
-        </div>
-    )
-}
 
-export default MyToken
+//     return (
+//         <div>
+
+//         </div>
+//     )
+// }
+
+// export default MyToken

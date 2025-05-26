@@ -1,19 +1,35 @@
 import React, { useEffect, useState } from 'react'
-import { MapPin, Clock, Star, Money } from 'phosphor-react'
+import { MapPin, Clock, Star, Money, ThumbsUp, ThumbsDown, PaperPlaneRight } from 'phosphor-react'
 import BASE_URL, { cookies } from '../lib/api'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import docAvatar from '../assets/docAvatar.png'
 import bgDoc from '../assets/bgDoc.png'
+import avatar from '../assets/avatar.png'
+import { fetchAddReview, fetchgetreview } from '../lib/reviewApi'
 
+
+const ratings = [
+    { stars: 5, percentage: 90 },
+    { stars: 4, percentage: 10 },
+    { stars: 3, percentage: 0 },
+    { stars: 2, percentage: 0 },
+    { stars: 1, percentage: 0 },
+];
 
 
 const DoctorDetails = () => {
 
     const [doctorDetails, setDoctorDetails] = useState({})
+    const [reviewsData, setReviewsData] = useState([])
+
+    const [myComment, setMyComment] = useState("");
+    const [myRating, setMyRating] = useState(0);
 
 
-    const { id } = useParams();
+    const { id } = useParams()
+
+
 
 
     const getDoctorDetails = async () => {
@@ -43,8 +59,57 @@ const DoctorDetails = () => {
         getDoctorDetails();
     }, [])
 
+    useEffect(() => {
 
-    console.log(doctorDetails?.daysWork);
+
+        const getReviewsData = async () => {
+
+            try {
+
+                const res = await fetchgetreview(id);
+                console.log(res);
+                setReviewsData(res);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getReviewsData();
+
+    }, [])
+
+
+
+    const averageRating = reviewsData.length > 0
+        ? (
+            reviewsData.reduce((sum, item) => sum + (item.rating || 0), 0) / reviewsData.length
+        ).toFixed(1)
+        : 0;
+
+    const handleMyRate = async () => {
+
+
+        try {
+            await fetchAddReview(id, myComment, myRating);
+            console.log("Review submitted successfully");
+
+            setMyComment("");
+            setMyRating(0);
+
+            const updatedReviews = await fetchgetreview(id);
+            setReviewsData(updatedReviews);
+
+        } catch (error) {
+            console.error(error);
+        }
+
+
+
+    }
+
+
+
 
 
     return (
@@ -79,21 +144,24 @@ const DoctorDetails = () => {
                         <div className='flex mt-7 items-center gap-2 flex-wrap sm:flex-nowrap'>
                             <Clock className='text-xl' />
                             <div className='break-words max-w-[300px] sm:max-w-none'>
-                                {doctorDetails?.daysWork}
+                                {doctorDetails?.daysWork ? doctorDetails?.daysWork.join(" - ") : ""} <br />
                             </div>
                         </div>
 
 
 
                         <div className='mt-5 flex gap-2 items-center'>
-                            <div className='flex text-amber-300'>
-                                <Star />
-                                <Star />
-                                <Star />
-                                <Star />
-                                <Star />
+                            <div className='flex'>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star
+                                        key={star}
+                                        weight="fill"
+                                        size={20}
+                                        className={star <= averageRating ? 'text-amber-400' : 'text-gray-300'}
+                                    />
+                                ))}
                             </div>
-                            <div> 5.0 (100 reviews) </div>
+                            <div> {averageRating} ({reviewsData.length} reviews) </div>
                         </div>
 
                     </div>
@@ -130,6 +198,126 @@ const DoctorDetails = () => {
 
             </div>
 
+            <div className='w-full h-[1px] bg-[#A6A6A6] mt-16'></div>
+
+            <div className='container mx-auto mt-16'>
+
+
+                <div className='flex gap-[20%] items-center'>
+                    <div className='flex items-center gap-2 md:text-4xl'>
+                        <div> {averageRating} </div>
+                        <Star
+
+                            weight="fill"
+                            size={36}
+                            className={'text-amber-400 '}
+                        />
+
+                    </div>
+
+                    <div className="space-y-2 w-full md:w-[50%]">
+                        {ratings.map((item) => (
+                            <div key={item.stars} className="flex items-center gap-2">
+                                <span className="w-4 text-sm">{item.stars}</span>
+                                <div className="flex-1 bg-gray-200 rounded-full h-2 relative overflow-hidden">
+                                    <div
+                                        className="h-2 rounded-full absolute top-0 left-0 bg-yellow-400 transition-all duration-500"
+                                        style={{ width: `${item.percentage}%` }}
+                                    ></div>
+                                </div>
+                                <span className="w-10 text-sm text-right">{item.percentage}%</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div className='w-full h-[1px] bg-[#A6A6A6] mt-16'></div>
+
+            <div className='container mx-auto mt-16'>
+
+                <div>
+
+                    <div className='flex justify-between items-center '>
+                        <div> all reviews ({reviewsData?.length}) </div>
+                        <div className=''> view more </div>
+                    </div>
+
+                    <div>
+                        {reviewsData.map((item, index) => (
+                            <div key={index} className='flex gap-4 items-center mt-8'>
+                                <div className='w-[60px] h-[60px] rounded-full overflow-hidden'>
+                                    <img className='w-full h-full' src={item.user.photo ? item.user.photo : avatar} alt="" />
+                                </div>
+
+                                <div className='flex flex-col gap-1 w-full'>
+                                    <div className='capitalize'> {item?.user?.firstName} {item?.user?.lastName} </div>
+
+                                    <div className='flex'>
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <Star
+                                                key={star}
+                                                weight="fill"
+                                                size={20}
+                                                className={star <= item.rating ? 'text-amber-400' : 'text-gray-300'}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    <div className='text-[#7B7B7B]'> {item.comment} </div>
+
+                                    <div className='flex gap-2 items-center text-primary text-xl cursor-pointer'>
+                                        <ThumbsUp />
+                                        <ThumbsDown />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
+
+
+                <div className='flex gap-4 items-center mt-8'>
+
+                    <div className='w-[60px] h-[60px] rounded-full overflow-hidden'><img className='w-full h-full' src={avatar} alt="" /></div>
+
+                    <input
+                        type="text"
+                        placeholder="Add a comment"
+                        className="w-[50%] border-none p-1.5 border-b border-solid border-[#A6A6A6] outline-none"
+                        value={myComment}
+                        onChange={(e) => setMyComment(e.target.value)}
+                    />
+
+                    <div className='flex flex-col items-center gap-2'>
+                        <p className='text-[#9E9E9E] '> Rate</p>
+
+                        <div className="flex myRate">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                    key={star}
+                                    weight="fill"
+                                    size={20}
+                                    className={`${star <= myRating ? 'text-amber-400' : 'text-gray-300'} cursor-pointer`}
+                                    onClick={() => setMyRating(star)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <button onClick={handleMyRate} className=' w-[40px] h-[40px] bg-[#ACACAC] hover:bg-primary cursor-pointer flex justify-center items-center text-2xl text-white'> <PaperPlaneRight /> </button>
+
+                </div>
+
+
+
+            </div>
+
+            <div className='w-full h-[1px] bg-[#A6A6A6] mt-16'></div>
 
         </div>
     )

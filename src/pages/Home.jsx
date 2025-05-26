@@ -22,30 +22,35 @@ export default function Home() {
 
             <div className='bg-[#F9FAFB]   pt-8 '>
 
-                <div className='  bg-gradient-to-r from-[#F9FAFB] h-[30vh] md:h-[40vh] lg:h-[50vh]    to-[#FF9131] '>
 
-                    <div className=' container h-full  pt-8 mx-auto flex justify-between items-center  relative '>
+                <div className='  bg-gradient-to-r from-[#F9FAFB] h-[30vh] md:h-[40vh] lg:h-[50vh]  relative  to-[#FF9131] '>
 
-                        <div className='sm:w-1/2 md:w-1/3 h-full flex gap-6 flex-col justify-center '>
-                            <h2 className=' sm:text-xl md:text-3xl lg:text-[56px] font-bold'> Your one-stop care solution </h2>
-                            <p className='text-[18px]'> Find veterinarians, shop supplies, adopt pets, or buy and sell in our marketplace. </p>
+                    <div className=' container h-full gap-5  pt-8 mx-auto flex justify-between items-center   '>
+
+                        <div className='w-[60%] sm:w-1/2 xl:w-[40%]  h-full flex gap-6 flex-col justify-center '>
+                            <h2 className=' text-sm md:text-2xl sm:text-[18px] lg:text-3xl lg:text-[56px] font-bold'> Your one-stop care solution </h2>
+                            <p className='text-sm md:text-[18px]'> Find veterinarians, shop supplies, adopt pets, or buy and sell in our marketplace. </p>
 
                             <div className='flex gap-4 '>
 
-                                <Link to="/register" className='bg-[#FF9131]  py-2 px-4 lg:py-3 lg:px-6 text-white rounded-lg cursor-pointer'> Get Started </Link>
+                                <Link to="/register" className='bg-[#FF9131] text-[12px] md:text-md  py-2 px-4 lg:py-3 lg:px-6 text-white rounded-lg cursor-pointer'> Get Started </Link>
 
-                                <Link to="/about" className=' py-2 px-4 lg:py-3 lg:px-6 text-primary border border-primary rounded-lg cursor-pointer'> Learn More </Link>
+                                <Link to="/about" className=' py-2 px-4 lg:py-3 text-[12px] md:text-md lg:px-6 text-primary border border-primary rounded-lg cursor-pointer'> Learn More </Link>
 
                             </div>
                         </div>
 
 
-                        <div className="absolute top-0 right-0 w-1/2 md:w-1/3 sm:w-2/5 max-w-full h-full">
-                            <img className="w-full h-full object-contain" src={imgHome} alt="home img" />
-                        </div>
+
 
                     </div>
+
+                    <div className="absolute top-[20px] right-0  w-2/5 md:w-[40%]   h-full">
+                        <img className="w-full h-full " src={imgHome} alt="home img" />
+                    </div>
+
                 </div >
+
 
                 <div className='bg-[#F9FAFB] pb-20   '>
 
@@ -100,17 +105,10 @@ export default function Home() {
                 </div>
 
 
-
-
                 <AdoptionPets />
-
                 <SalePets />
-
                 <ShopPets />
-
                 <DoctorsHome />
-
-
 
 
             </div >

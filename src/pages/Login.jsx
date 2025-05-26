@@ -15,7 +15,7 @@ import BASE_URL, { cookies } from '../lib/api';
 
 
 export default function Login() {
-   const [search,setSearch] = useSearchParams()
+    const [search, setSearch] = useSearchParams()
 
     let [errorMsg, setErrorMsg] = useState()
     let navigate = useNavigate()
@@ -27,14 +27,12 @@ export default function Login() {
 
         axios.post(`${BASE_URL}/auth/login`, values).then(({ data }) => {
 
-            console.log(data);
-
 
             if (data.message == "login success") {
 
                 toast.success("login success")
                 const date = new Date()
-                date.setDate(date.getDate()+1)
+                date.setDate(date.getDate() + 1)
                 cookies.set('token', data?.data?.token, { expires: date });
                 navigate('/home')
             }
@@ -76,14 +74,14 @@ export default function Login() {
         }
     })
 
-    useEffect(()=>{
-        if(search.get("token")){
+    useEffect(() => {
+        if (search.get("token")) {
             const date = new Date()
-            date.setDate(date.getDate()+1)
-            cookies.set("token",search.get("token"),{expires: date})
+            date.setDate(date.getDate() + 1)
+            cookies.set("token", search.get("token"), { expires: date })
             navigate("/home")
         }
-    },[search])
+    }, [search])
 
 
 

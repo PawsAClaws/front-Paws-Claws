@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Heart, Globe, Bell } from "phosphor-react";
 import avatar from '../assets/avatar.png'
-import flag from '../assets/US flag.svg'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Search from './Search';
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +14,7 @@ import { togleCard } from '../store/becomeDoctorSlice.js';
 import NotificationsCard from './NotificationsCard.jsx';
 import { fetchNotifications } from '../store/notificationsSlice.js';
 import { cookies } from '../lib/api.js';
+import { fetchMyDoc } from '../lib/getMyDoc.js';
 
 
 
@@ -29,13 +29,14 @@ export default function NavbarLogin() {
     const menuRef = useRef(null);
     const navigate = useNavigate()
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [checkDoc, setCheckDoc] = useState(false);
 
     const dispatch = useDispatch();
     const wishlistItems = useSelector((state) => state.getWishlist.items);
     const userData = useSelector((state) => state.getUser.user);
     const notificationsList = useSelector((state) => state.notifications);
 
-    console.log(notificationsList);
+    console.log(userData);
 
 
 
@@ -56,6 +57,7 @@ export default function NavbarLogin() {
 
 
     useEffect(() => {
+
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setIsAccountMenuOpen(false);
@@ -67,8 +69,27 @@ export default function NavbarLogin() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
+
     }, []);
 
+    useEffect(() => {
+
+        const handleMyDoc = async () => {
+
+            const res = await fetchMyDoc();
+            console.log(res.data);
+
+            if (res.data.active) {
+                setCheckDoc(true);
+            } else {
+                setCheckDoc(false);
+            }
+
+        }
+
+        handleMyDoc();
+
+    }, []);
 
 
     return (
@@ -83,7 +104,8 @@ export default function NavbarLogin() {
 
                         <div className=" text-md md:text-2xl  items-center  text-gray-800 flex">
                             <img className='w-8 lg:w-10' src={logo} alt="logo" />
-                            <Link to="/home">  <h1 className='text-primary'>Paws&Claws </h1> </Link>
+
+                            <Link to="home">  <h1 className='text-primary'>Paws&Claws </h1> </Link>
 
                         </div>
 
@@ -95,7 +117,7 @@ export default function NavbarLogin() {
                                 <p>العربية</p>
                             </div>
 
-                            <Link to="/myWishlist" className='text-primary border-e-black lg:text-lg xl:text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'>
+                            <Link to="myWishlist" className='text-primary border-e-black lg:text-lg xl:text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'>
                                 Wishlist
                                 <span className="relative">
                                     <Heart className='inline-block ' />
@@ -138,11 +160,11 @@ export default function NavbarLogin() {
                         </div>
 
 
+
+                        {/* account menu */}
                         <div className=' gap-[18px] hidden lg:flex'>
 
-
                             <div>
-
                                 <div ref={menuRef} className='relative flex gap-2'>
 
                                     <div className='w-14 h-14 rounded-full'>
@@ -162,10 +184,18 @@ export default function NavbarLogin() {
                                     {isAccountMenuOpen && (
                                         <div className="absolute top-20 right-0 w-48 bg-white shadow-lg rounded-lg py-4 z-50">
                                             <ul className="flex flex-col text-center gap-4">
-                                                <li><Link to="/profile">profile</Link></li>
+                                                <li><Link to="profile">profile</Link></li>
                                                 <li><a href="#">Settings</a></li>
                                                 <li><a href="#">My Ads</a></li>
-                                                <li> <button className='cursor-pointer' onClick={() => dispatch(togleCard())} > become a doctor</button> </li>
+
+                                                {checkDoc ? (
+                                                    <li><Link to="doctorPage">My Doc Page</Link></li>
+                                                ) : (
+                                                    <li> <button className='cursor-pointer' onClick={() => dispatch(togleCard())} > become a doctor</button> </li>
+                                                )}
+
+
+
                                                 <li><a href="#">Need Help?</a></li>
                                             </ul>
                                             <hr className="my-3" />
@@ -177,17 +207,10 @@ export default function NavbarLogin() {
                                             </button>
                                         </div>
                                     )}
+
+
                                 </div>
-
-
-
                             </div>
-
-
-
-
-
-
                         </div>
 
 
@@ -214,7 +237,9 @@ export default function NavbarLogin() {
 
                             <div className='bg-[#FF9131] py-4 px-3 flex-wrap gap-y-2 flex items-center justify-between'>
 
-                                <div> <img src={flag} alt="" /> </div>
+                                <Link to="categories" className="bg-white cursor-pointer  lg:hidden text-primary rounded-lg py-2 px-[18px]">
+                                    Post your ad
+                                </Link>
 
                                 <div className='flex gap-1.5'> <span className=' text-xl md:text-2xl'>العربية</span> <span> <Globe className='inline-block text-2xl md:text-3xl' /></span> </div>
 
@@ -228,20 +253,19 @@ export default function NavbarLogin() {
                                     <div className='w-14 h-14 rounded-full '>
                                         <img className='w-full h-full rounded-full' src={userData.photo ? userData.photo : avatar} alt="avatar" />
                                     </div>
-
-
-
                                 </div>
-
-
                             </div>
 
+
+                            {/* mobile Nav links */}
+
                             <div className='px-6 flex flex-col gap-6'>
-                                <NavLink to="/home" className="block ">Home</NavLink>
-                                <NavLink to="/doctors" className="block ">doctors</NavLink>
-                                <NavLink to="/shop" className="block ">shop</NavLink>
-                                <NavLink to="/adoption" className="block ">adoption</NavLink>
-                                <NavLink to="/animals" className="block ">animals</NavLink>
+                                <NavLink to="home" className="block ">Home</NavLink>
+                                <NavLink to="doctors" className="block ">doctors</NavLink>
+                                <NavLink to="shop" className="block ">shop</NavLink>
+                                <NavLink to="adoption" className="block ">adoption</NavLink>
+                                <NavLink to="animals" className="block ">animals</NavLink>
+                                <NavLink to="doctorMap" className="block "> nearest vet</NavLink>
                             </div>
 
                         </motion.div>
@@ -249,28 +273,36 @@ export default function NavbarLogin() {
                 }
 
 
-                {/* links */}
 
+                {/* desktop Nav links */}
 
                 <div className='bg-[#FBF0E7]'>
 
-                    <div className='container mx-auto'>
+                    <div className='container mx-auto flex justify-between items-center '>
 
-                        <ul className='hidden lg:flex gap-10 py-[18px]'>
-                            <li> <NavLink to="/home">Home</NavLink> </li>
-                            <li><NavLink to="animals">Animals</NavLink></li>
-                            <li><NavLink to="adoption">Adoption</NavLink></li>
-                            <li><NavLink to="shop">shop</NavLink></li>
-                            <li><NavLink to="doctors">doctor</NavLink></li>
+                        <div>
+                            <ul className='hidden lg:flex gap-10 py-[18px]'>
+                                <li> <NavLink className="capitalize" to="home">Home</NavLink> </li>
+                                <li><NavLink className="capitalize" to="animals">Animals</NavLink></li>
+                                <li><NavLink className="capitalize" to="adoption">Adoption</NavLink></li>
+                                <li><NavLink className="capitalize" to="shop">shop</NavLink></li>
+                                <li><NavLink className="capitalize" to="doctors">doctor</NavLink></li>
+                                <li> <NavLink className="capitalize" to="doctorMap" > nearest vet</NavLink> </li>
 
 
-                        </ul>
+
+                            </ul>
+                        </div>
+
+                        <Link to="categories" className="bg-[#FEA230] cursor-pointer hidden lg:flex text-white rounded-lg py-2 px-[18px]">
+                            Post your ad
+                        </Link>
 
                     </div>
                 </div>
 
                 <div className='lg:hidden '>
-                    <MobileNav />
+                    <MobileNav setIsNotificationsOpen={setIsNotificationsOpen} notificationsList={notificationsList} isNotificationsOpen={isNotificationsOpen} />
                 </div>
 
             </header >

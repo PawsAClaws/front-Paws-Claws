@@ -5,6 +5,9 @@ import DoctorsCard from '../components/DoctorsCard'
 import { CaretRight, CaretLeft } from "phosphor-react";
 import BASE_URL, { cookies } from '../lib/api';
 import axios from 'axios';
+import Loading from "../components/Loading";
+
+
 
 
 const itemsPerPage = 24;
@@ -13,7 +16,54 @@ const Doctors = () => {
 
     const [currentPage, setCurrentPage] = useState(0);
     const [allDoctors, setAllDoctors] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeFilter, setActiveFilter] = useState(null);
 
+
+
+    const [filters, setFilters] = useState({
+        minPrice: '',
+        maxPrice: '',
+        country: '',
+        city: '',
+        postedAt: ''
+    });
+
+
+    const filteredItems = allDoctors.filter(item => {
+        let isValid = true;
+
+        const itemCountry = item.country?.toLowerCase() || '';
+        const itemCity = item.city?.toLowerCase() || '';
+
+        if (filters.country) {
+            isValid = isValid && itemCountry === filters.country.toLowerCase();
+        }
+
+        if (filters.city) {
+            isValid = isValid && itemCity === filters.city.toLowerCase();
+        }
+
+        if (filters.minPrice) {
+            isValid = isValid && item.price >= Number(filters.minPrice);
+        }
+
+        if (filters.maxPrice) {
+            isValid = isValid && item.price <= Number(filters.maxPrice);
+        }
+
+        if (filters.postedAt) {
+            const itemDate = new Date(item.createdAt).toISOString().split('T')[0];
+            isValid = isValid && itemDate === filters.postedAt;
+        }
+
+        return isValid;
+    });
+
+
+    const offset = currentPage * itemsPerPage;
+    const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
 
     const getDoctorsData = async () => {
 
@@ -33,6 +83,9 @@ const Doctors = () => {
         } catch (error) {
             console.log(error);
         }
+        finally {
+            setIsLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -43,23 +96,19 @@ const Doctors = () => {
 
 
 
-
-    const offset = currentPage * itemsPerPage;
-    const currentItems = allDoctors.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(allDoctors.length / itemsPerPage);
-
-
-
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
+
+    { if (isLoading) return <Loading />; }
 
     return (
 
         <div className='bg-bg-app pb-16'>
             <div className='container mx-auto'>
 
-                <Filter />
+                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} filters={filters} setFilters={setFilters} />
+
 
                 <h6 className='text-2xl my-10'> Most liked </h6>
 

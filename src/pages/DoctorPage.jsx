@@ -1,10 +1,10 @@
-import { desc, img } from 'framer-motion/client'
+
 import React, { useEffect, useState } from 'react'
-import { date } from 'yup'
 import avatar from '../assets/avatar.png'
 import { X, HourglassMedium, Check, Trash } from 'phosphor-react'
 import BASE_URL, { cookies } from '../lib/api'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 
 
@@ -66,6 +66,11 @@ const DoctorPage = () => {
             console.log(res.data);
 
             managingDoctorRequst();
+            if (status === "cancelled") {
+                toast.success(" appointment cancelled successfully");
+            } else if (status === "accepted") {
+                toast.success(" appointment accepted successfully");
+            }
 
 
         } catch (error) {
@@ -195,50 +200,7 @@ const DoctorPage = () => {
                                     </td>
 
 
-                                    {/* <td className="px-3 py-2">
-                                        <div className='flex gap-2.5 justify-center flex-wrap'>
-                                            {item.status === 'pending' && (
-                                                <>
-                                                    <div className='flex items-center gap-1 bg-[#FFA5A5] rounded-[54px] px-2 py-1 text-[#FF4646]'>
-                                                        <button className='cursor-pointer'>Cancel</button>
-                                                        <X />
-                                                    </div>
-                                                    <div className='flex items-center gap-1 bg-[#E9FFEF] rounded-[54px] px-2 py-1 text-[#409261]'>
-                                                        <button className='cursor-pointer'>Accept</button>
-                                                        <Check />
-                                                    </div>
-                                                </>
-                                            )}
-                                            {item.status === 'accepted' && (
-                                                <>
 
-                                                    <div className='flex items-center gap-1 bg-[#FFA5A5] rounded-[54px] px-2 py-1 text-[#FF4646]'>
-                                                        <button className='cursor-pointer'>Cancel</button>
-                                                        <X />
-                                                    </div>
-
-                                                    <div className='flex items-center gap-1 bg-[#FFF2DD] rounded-[54px] px-2 py-1 text-[#D98634]'>
-                                                        <button className='cursor-pointer'>pend </button>
-                                                        <HourglassMedium />
-                                                    </div>
-                                                </>
-                                            )}
-                                            {item.status === 'cancelled' && (
-                                                <>
-
-                                                    <div className='flex items-center gap-1 bg-[#FFF2DD] rounded-[54px] px-2 py-1 text-[#D98634]'>
-                                                        <button className='cursor-pointer'>pend </button>
-                                                        <HourglassMedium />
-                                                    </div>
-
-                                                    <div className='flex items-center gap-1 bg-[#E9FFEF] rounded-[54px] px-2 py-1 text-[#409261]'>
-                                                        <button className='cursor-pointer'>Accept</button>
-                                                        <Check />
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    </td> */}
 
                                     <td>
 
@@ -247,8 +209,13 @@ const DoctorPage = () => {
                                                 <button onClick={() => managingAction(item.id, "cancelled")} className='cursor-pointer'>Cancel</button>
                                                 <X />
                                             </div>
-                                            <div className='flex items-center gap-1 bg-[#E9FFEF] rounded-[54px] px-2 py-1 text-[#409261]'>
-                                                <button onClick={() => managingAction(item.id, "accepted")} className='cursor-pointer'>Accept</button>
+
+                                            <div className={`flex items-center gap-1 bg-[#E9FFEF] rounded-[54px] px-2 py-1 text-[#409261] ${item.status === 'accepted' ? 'opacity-[30%] ' : ''} `}>
+                                                <button onClick={() => managingAction(item.id, "accepted")}
+                                                    className='cursor-pointer'
+                                                    disabled={item.status === 'accepted' ? true : false}
+                                                >
+                                                    Accept</button>
                                                 <Check />
                                             </div>
                                         </div>

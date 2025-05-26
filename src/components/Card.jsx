@@ -6,8 +6,7 @@ import { useSelector } from 'react-redux';
 import { toggleItem } from '../store/wishlist';
 import { fetchWishList } from '../lib/WishListApi';
 import { useDispatch } from 'react-redux';
-import { openLoginAlert } from '../store/loginAlertSlice';
-import { cookies } from '../lib/api';
+
 
 
 export default function Card({ data }) {
@@ -21,14 +20,7 @@ export default function Card({ data }) {
     const inWishlist = wishlist?.some(item => item.postId === data.id);
 
 
-    function requireLogin(callback) {
-        const token = cookies.get("token");
-        if (!token) {
-            dispatch(openLoginAlert());
-        } else {
-            callback();
-        }
-    }
+
 
 
     const handleWishlist = async (e) => {
@@ -70,13 +62,13 @@ export default function Card({ data }) {
                 </div>
             </div>
 
-            <div className=' w-full md:w-full h-[300px] '>
+            <div className=' w-full h-[300px] '>
                 <img src={data.photo} alt={data.title} className="w-full h-full object-cover" />
             </div>
 
             <div className="py-6 px-[18px]">
                 <h4 className="text-xl font-semibold  mb-2"> {data.title} </h4>
-                <p className="text-[#5F5B5B] my-6"> {data.description}</p>
+                <p className="text-[#5F5B5B] my-6"> {data.description.split(' ').slice(0, 4).join(' ') + '...'}</p>
 
                 <div className='flex justify-between '>
 

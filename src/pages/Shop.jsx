@@ -4,22 +4,65 @@ import ReactPaginate from "react-paginate";
 import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
 import Card from "../components/Card";
-import { all } from "axios";
+import Loading from "../components/Loading";
+import Filter from "../components/Filter";
+
+
 
 const itemsPerPage = 24;
-
 
 export default function Shop() {
 
     const [currentPage, setCurrentPage] = useState(0);
 
     const [allShop, setAllShop] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [activeFilter, setActiveFilter] = useState(null);
+    const [filters, setFilters] = useState({
+        minPrice: '',
+        maxPrice: '',
+        country: '',
+        city: '',
+        postedAt: ''
+    });
 
     const shop = "shop";
 
+    const filteredItems = allShop.filter(item => {
+        let isValid = true;
+
+        const itemCountry = item.country?.toLowerCase() || '';
+        const itemCity = item.city?.toLowerCase() || '';
+
+        if (filters.country) {
+            isValid = isValid && itemCountry === filters.country.toLowerCase();
+        }
+
+        if (filters.city) {
+            isValid = isValid && itemCity === filters.city.toLowerCase();
+        }
+
+        if (filters.minPrice) {
+            isValid = isValid && item.price >= Number(filters.minPrice);
+        }
+
+        if (filters.maxPrice) {
+            isValid = isValid && item.price <= Number(filters.maxPrice);
+        }
+
+        if (filters.postedAt) {
+            const itemDate = new Date(item.createdAt).toISOString().split('T')[0];
+            isValid = isValid && itemDate === filters.postedAt;
+        }
+
+        return isValid;
+    });
+
+
     const offset = currentPage * itemsPerPage;
-    const currentItems = allShop.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(allShop.length / itemsPerPage);
+    const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
 
 
 
@@ -36,6 +79,9 @@ export default function Shop() {
             } catch (error) {
                 console.log(error);
             }
+            finally {
+                setIsLoading(false);
+            }
         }
 
         getShopData();
@@ -50,7 +96,7 @@ export default function Shop() {
     };
 
 
-
+    { if (isLoading) return <Loading />; }
 
     return (
 
@@ -58,24 +104,14 @@ export default function Shop() {
 
 
             <div className="container mx-auto ">
-                {/* History Component */}
-                <div className="pt-[34px]">
-                    <History />
-                </div>
+
+
 
                 {/* Filters and Post Ad */}
-                <div className="flex justify-between items-center mt-12">
-                    <ul className="gap-3 hidden md:flex">
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Price</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Location</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Distance</li>
-                        <li className="bg-[#D38139] text-white rounded-[22px] px-4 py-3">Posted at</li>
-                        <li className="bg-[#FBF0E7] rounded-[22px] px-4 py-3">Clear All</li>
-                    </ul>
-                    <button className="bg-[#FEA230] text-white rounded-lg px-4 py-[18px]">
-                        Post your ad
-                    </button>
-                </div>
+
+                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} filters={filters} setFilters={setFilters} />
+
+
 
                 {/* Sort Section */}
                 <div className="flex justify-between items-center my-8">
@@ -87,9 +123,9 @@ export default function Shop() {
 
                 {/* Image Grid */}
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
 
-                    {allShop.map((item, index) => (
+                    {currentItems.map((item, index) => (
 
                         <Card key={index} data={item} />
 

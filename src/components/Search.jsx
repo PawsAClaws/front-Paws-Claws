@@ -49,12 +49,12 @@ const Search = () => {
         }
     }
 
-    useEffect(() => {
-        if (searchTerm.trim() === "") {
-            dispatch(clearSearch())
-            navigate("/home")
-        }
-    }, [searchTerm, dispatch, navigate])
+    // useEffect(() => {
+    //     if (searchTerm.trim() === "") {
+    //         dispatch(clearSearch())
+    //         navigate("/home")
+    //     }
+    // }, [searchTerm, dispatch, navigate])
 
 
     return (

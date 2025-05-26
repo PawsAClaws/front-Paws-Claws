@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import BASE_URL, { cookies } from '../lib/api';
 import axios from 'axios';
 import { markAllAsRead } from '../store/notificationsSlice';
+import noNoti from '../assets/noNoti.png';
+
 
 
 const NotificationsCard = () => {
@@ -53,7 +55,7 @@ const NotificationsCard = () => {
 
     return (
 
-        <div className='w-[500px] bg-bg-app z-50 max-h-[600px] overflow-y-auto rounded-2xl'>
+        <div className='w-screen lg:w-[500px] h-full bg-bg-app z-50 md:max-h-[600px] overflow-y-auto rounded-2xl'>
 
             <div className=''>
 
@@ -100,6 +102,7 @@ const NotificationsCard = () => {
 
 
                 </div>
+
                 {readNotifications.length > 0 ? <p className='px-4 pt-3.5'> Old </p> : ''}
 
 
@@ -111,10 +114,14 @@ const NotificationsCard = () => {
                             <div className='w-[60px] h-[70px]'>  <img src={avatar} alt="" /> </div>
                             <div> {notification.message} </div>
                         </div>
-                    )) : ''}
+                    )) : <div>
+                        <img className='w-full h-full' src={noNoti} alt="" />
+
+                    </div>}
                 </div>
 
             </div>
+
 
 
         </div>

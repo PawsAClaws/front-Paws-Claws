@@ -117,10 +117,12 @@ const Profile = () => {
                     </div>
                 </div>
 
-                <div className='mt-20 flex justify-between'>
+                <div className='mt-20 flex items-center gap-4'>
 
                     <div> my ads </div>
-                    <div className='text-primary cursor-pointer'> see all </div>
+
+                    <div className='bg-primary w-10 h-10 rounded-full text-white flex items-center justify-center'> {myAdsData.length} </div>
+
 
                 </div>
 

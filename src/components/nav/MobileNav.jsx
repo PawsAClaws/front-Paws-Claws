@@ -5,23 +5,19 @@ import avatar from '../../assets/avatar.png'
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from '../../store/getUserSlice';
 import { div } from 'framer-motion/client';
+import NotificationsCard from '../NotificationsCard';
 
 
 
 
-const MobileNav = () => {
+const MobileNav = ({ isNotificationsOpen, setIsNotificationsOpen, notificationsList }) => {
 
 
 
-
-    const dispatch = useDispatch();
     const userData = useSelector((state) => state.getUser.user);
 
 
-    useEffect(() => {
 
-        dispatch(getUserData());
-    }, [dispatch]);
 
 
     return (
@@ -35,14 +31,34 @@ const MobileNav = () => {
                     <NavLink className="text-sm" to="/home" > Home </NavLink>
                 </div>
 
-                <div className='flex flex-col gap-4 items-center justify-center'>
-                    <Bell className='text-xl' />
-                    <NavLink className="text-sm" to="/notification" > Notifications </NavLink>
+                <div className='flex flex-col gap-4 items-center justify-center '>
+                    <div className='relative'>
+                        <Bell className='text-xl' />
+                        {notificationsList.unreadCount > 0 && (
+                            <span className="absolute  bottom-[15px]  left-[15px] bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                {notificationsList.unreadCount}
+                            </span>
+                        )}
+                    </div>
+                    <button className="cursor-pointer text-sm" onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}  > Notifications </button>
+
+
+
+
+                    {isNotificationsOpen && (
+
+                        <div className='fixed top-0 bottom-[90px] left-0 w-full z-50 '>
+                            <NotificationsCard />
+                        </div>
+                    )}
+
+
+
                 </div>
 
                 <div className='flex flex-col gap-4 items-center justify-center'>
                     <Plus className='text-xl' />
-                    <NavLink className="text-sm" to="/category" > Add Post </NavLink>
+                    <NavLink className="text-sm" to="/categories" > Add Post </NavLink>
                 </div>
 
                 <div className='flex flex-col gap-2 items-center justify-center'>
@@ -53,7 +69,6 @@ const MobileNav = () => {
 
                     <NavLink className="text-sm" to="/profile" > MyAccount </NavLink>
                 </div>
-
 
             </div>
 
