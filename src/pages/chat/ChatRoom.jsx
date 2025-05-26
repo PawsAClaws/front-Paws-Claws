@@ -14,6 +14,7 @@ function App() {
     const [error, setError] = useState(null);
     const messagesEndRef = useRef(null);
     const socketRef = useRef(null);
+    const [socket,setSocket] = useState(null)
 
     const API_BASE_URL = 'https://backend-online-courses.onrender.com/api/v1/chat';
 
@@ -21,10 +22,13 @@ function App() {
 
     useEffect(() => {
         const socket = io('https://backend-online-courses.onrender.com', {
-            headers: {
-                'authorization': `Bearer ${token}`
+            auth: {
+                token: `Bearer ${token}`
             },
         });
+        if(socket){
+            setSocket(socket)
+        }
 
         socket.on('onlineUsers', (data) => {
 
@@ -55,7 +59,7 @@ function App() {
             });
 
             console.log('Conversations fetched:', response.data);
-            setConversations(response.data);
+            setConversations(response.data.data);
         } catch (error) {
             console.error('Error fetching conversations:', error);
             setError('Failed to load conversations. Please check your connection.');
@@ -99,13 +103,13 @@ function App() {
 
             console.log('Messages fetched:', response.data);
 
-            const transformedMessages = response.data.map(msg => ({
-                ...msg,
-                isOwn: msg.senderId === getCurrentUserId(),
-                timestamp: formatTimestamp(msg.createdAt || msg.timestamp)
-            }));
+            // const transformedMessages = response.data.data.map(msg => ({
+            //     ...msg,
+            //     isOwn: msg.senderId === getCurrentUserId(),
+            //     timestamp: formatTimestamp(msg.createdAt || msg.timestamp)
+            // }));
 
-            setMessages(transformedMessages);
+            setMessages((prev)=> [...prev,...response.data.data]);
         } catch (error) {
             console.error('Error fetching messages:', error);
             setError('Failed to load messages.');
@@ -136,56 +140,15 @@ function App() {
         if (!newMessage.trim() || !selectedConversation) return;
 
         const messageData = {
-            conversationId: selectedConversation.id,
-            text: newMessage,
+            message: newMessage,
             senderId: 6,
-            timestamp: new Date().toISOString()
+            receiverId:14
         };
 
-        try {
-            const optimisticMessage = {
-                id: Date.now(),
-                senderId: 6,
-                text: newMessage,
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                isOwn: true,
-                pending: true
-            };
-
-            setMessages(prev => [...prev, optimisticMessage]);
-            setNewMessage('');
-
-            const response = await axios.post(`${API_BASE_URL}/message/${selectedConversation.id}`, {
-                message: newMessage,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            console.log('Message sent via API:', response.data);
-
-            if (socketRef.current && isConnected) {
-                socketRef.current.emit('sendMessage', {
-                    ...messageData,
-                    messageId: response.data.id || response.data._id
-                });
-            }
-
-            setMessages(prev => prev.map(msg =>
-                msg.id === optimisticMessage.id
-                    ? { ...response.data, isOwn: true, pending: false }
-                    : msg
-            ));
-
-        } catch (error) {
-            console.error('Error sending message:', error);
-            setError('Failed to send message. Please try again.');
-
-            setMessages(prev => prev.filter(msg => msg.id !== optimisticMessage.id));
-            setNewMessage(newMessage);
-        }
+        socket.emit('newMessage', messageData);
+        socket.on('newMessage', (data) => {
+            setMessages((prevMessages) => [...prevMessages, data]);
+        })
     };
 
     // const getCurrentUserId = () => {
@@ -357,13 +320,13 @@ function App() {
                                 </span>
                             </div>
 
-                            {messages.map((message) => (
-                                <div key={message.id} className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${message.isOwn
+                            {messages.reverse().map((message) => (
+                                <div key={message.id} className={`flex ${message.sendBy !== 14 ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${message.sendBy !== 14
                                         ? 'bg-orange-400 text-white'
                                         : 'bg-orange-100 text-gray-800'
                                         } shadow-sm ${message.pending ? 'opacity-70' : ''}`}>
-                                        <p className="text-sm">{message.text || message.content}</p>
+                                        <p className="text-sm">{message.message}</p>
                                         <div className="flex items-center justify-end mt-1 space-x-1">
                                             <span className={`text-xs ${message.isOwn ? 'text-orange-100' : 'text-gray-500'}`}>
                                                 {message.timestamp}
@@ -400,12 +363,12 @@ function App() {
                                         onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                                         placeholder="Type your message..."
                                         className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        disabled={!isConnected}
+                                        // disabled={!isConnected}
                                     />
                                 </div>
                                 <button
                                     onClick={sendMessage}
-                                    disabled={!newMessage.trim() || !isConnected}
+                                    // disabled={!newMessage.trim() || !isConnected}
                                     className="p-2 bg-orange-400 hover:bg-orange-500 disabled:bg-gray-300 rounded-full transition-colors"
                                 >
                                     <Send className="w-5 h-5 text-white" />
