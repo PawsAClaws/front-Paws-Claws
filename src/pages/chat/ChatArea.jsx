@@ -4,17 +4,20 @@ import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { cookies } from '../../lib/api';
 import { fetchMessages } from './useChat';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 
 
-const ChatArea = ({ id }) => {
+const ChatArea = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [socket, setSocket] = useState(null);
     const userData = useSelector((state) => state.getUser.user);
     const senderId = userData.id;
     const token = cookies.get('token');
+
+    const { id } = useParams()
+
 
 
     const location = useLocation();
@@ -28,13 +31,10 @@ const ChatArea = ({ id }) => {
                 token: `Bearer ${token}`
             },
         });
-
         newSocket.on('connect', () => {
             console.log('✅ Socket connected:', newSocket.id);
         });
-
         setSocket(newSocket);
-
         return () => {
             newSocket.disconnect();
         };
@@ -69,21 +69,16 @@ const ChatArea = ({ id }) => {
         };
     }, [socket]);
 
-
     const sendMessage = () => {
 
         if (!newMessage.trim() || !socket) return;
-
         const messageData = {
             message: newMessage,
             senderId,
-            receiverId: id,
+            receiverId: +id,
         };
         console.log(messageData);
-
-
         socket.emit('newMessage', messageData);
-
         setNewMessage('');
     };
 

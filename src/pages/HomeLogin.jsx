@@ -30,7 +30,8 @@ export default function HomeLogin() {
     useEffect(() => {
 
         dispatch(getAllWishList());
-    }, [dispatch]);
+
+    }, []);
 
 
     return (
