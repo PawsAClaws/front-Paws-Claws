@@ -19,7 +19,9 @@ const PostDetails = ({ post }) => {
     const postOwnerId = postDetails.userId;
 
     const { id } = useParams()
-    const navigate = useNavigate();
+
+    console.log(id);
+
 
 
 

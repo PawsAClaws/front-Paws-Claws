@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Search, Send, Paperclip, MoreHorizontal } from 'lucide-react';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { cookies } from '../../lib/api';
 
-function App() {
+function ChatTest() {
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedConversation, setSelectedConversation] = useState(null);
@@ -13,6 +14,7 @@ function App() {
     const [error, setError] = useState(null);
     const messagesEndRef = useRef(null);
     const socketRef = useRef(null);
+    const [socket, setSocket] = useState(null)
 
     const API_BASE_URL = 'https://backend-online-courses.onrender.com/api/v1/chat';
 
@@ -20,10 +22,13 @@ function App() {
 
     useEffect(() => {
         const socket = io('https://backend-online-courses.onrender.com', {
-            headers: {
-                'authorization': `Bearer ${token}`
+            auth: {
+                token: `Bearer ${token}`
             },
         });
+        if (socket) {
+            setSocket(socket)
+        }
 
         socket.on('onlineUsers', (data) => {
 
@@ -54,7 +59,7 @@ function App() {
             });
 
             console.log('Conversations fetched:', response.data);
-            setConversations(response.data);
+            setConversations(response.data.data);
         } catch (error) {
             console.error('Error fetching conversations:', error);
             setError('Failed to load conversations. Please check your connection.');
@@ -96,14 +101,15 @@ function App() {
                 }
             });
 
+            console.log('Messages fetched:', response.data);
 
-            const transformedMessages = response.data.map(msg => ({
-                ...msg,
-                isOwn: msg.senderId === getCurrentUserId(),
-                timestamp: formatTimestamp(msg.createdAt || msg.timestamp)
-            }));
+            // const transformedMessages = response.data.data.map(msg => ({
+            //     ...msg,
+            //     isOwn: msg.senderId === getCurrentUserId(),
+            //     timestamp: formatTimestamp(msg.createdAt || msg.timestamp)
+            // }));
 
-            setMessages(transformedMessages);
+            setMessages((prev) => [...prev, ...response.data.data]);
         } catch (error) {
             console.error('Error fetching messages:', error);
             setError('Failed to load messages.');
@@ -131,67 +137,26 @@ function App() {
     };
 
     const sendMessage = async () => {
-        if (!newMessage.trim() || !selectedConversation) return;
+        if (!newMessage.trim()) return;
 
         const messageData = {
-            conversationId: selectedConversation.id,
-            text: newMessage,
-            senderId: 6,
-            timestamp: new Date().toISOString()
+            message: newMessage,
+            senderId: 3,
+            receiverId: 6 // ← حط هنا ID ثابت للتجربة أو خليه ديناميكي لاحقًا
         };
 
-        try {
-            const optimisticMessage = {
-                id: Date.now(),
-                senderId: 6,
-                text: newMessage,
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                isOwn: true,
-                pending: true
-            };
+        socket.emit('newMessage', messageData);
 
-            setMessages(prev => [...prev, optimisticMessage]);
-            setNewMessage('');
+        // استمع للرسالة المرتجعة (يمكن يكون محتاج يتنقل لفوق في useEffect لتجنب تكراره)
+        socket.on('newMessage', (data) => {
+            setMessages((prevMessages) => [...prevMessages, data]);
+        });
 
-            const response = await axios.post(`${API_BASE_URL}/message/${selectedConversation.id}`, {
-                message: newMessage,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            console.log('Message sent via API:', response.data);
-
-            if (socketRef.current && isConnected) {
-                socketRef.current.emit('sendMessage', {
-                    ...messageData,
-                    messageId: response.data.id || response.data._id
-                });
-            }
-
-            setMessages(prev => prev.map(msg =>
-                msg.id === optimisticMessage.id
-                    ? { ...response.data, isOwn: true, pending: false }
-                    : msg
-            ));
-
-        } catch (error) {
-            console.error('Error sending message:', error);
-            setError('Failed to send message. Please try again.');
-
-            setMessages(prev => prev.filter(msg => msg.id !== optimisticMessage.id));
-            setNewMessage(newMessage);
-        }
+        setNewMessage('');
     };
 
-    // const getCurrentUserId = () => {
 
-    //     return localStorage.getItem('userId') || '1';
-    // };
 
-    // Helper function to format timestamps
     const formatTimestamp = (timestamp) => {
         const date = new Date(timestamp);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -236,12 +201,88 @@ function App() {
     };
 
     return (
-        <div className="flex h-[85vh] bg-gray-50">
+        <div className="flex h-screen bg-gray-50">
+            {/* Sidebar */}
+            <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+                {/* Header */}
+                <div className="p-4 border-b border-gray-200">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
 
+                    {/* Connection Status */}
+                    <div className="mt-2 flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                        <span className="text-xs text-gray-500">
+                            {isConnected ? 'Connected' : 'Disconnected'}
+                        </span>
+                    </div>
+                </div>
 
-            <div className='flex w-full'>
-                <Sidebar id={id} />
-                <ChatArea id={id} />
+                {/* Error Display */}
+                {error && (
+                    <div className="p-3 m-3 bg-red-100 border border-red-300 rounded-lg">
+                        <p className="text-sm text-red-700">{error}</p>
+                        <button
+                            onClick={() => {
+                                setError(null);
+                                fetchConversations();
+                            }}
+                            className="text-xs text-red-600 underline mt-1"
+                        >
+                            Retry
+                        </button>
+                    </div>
+                )}
+
+                {/* Loading State */}
+                {loading && (
+                    <div className="p-4 text-center">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>
+                        <p className="text-sm text-gray-500 mt-2">Loading...</p>
+                    </div>
+                )}
+
+                {/* Conversations List */}
+                <div className="flex-1 overflow-y-auto">
+                    {conversations.map((conversation) => (
+                        <div
+                            key={conversation.id}
+                            onClick={() => handleConversationSelect(conversation)}
+                            className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${selectedConversation?.id === conversation.id ? 'bg-blue-50 border-r-2 border-r-blue-500' : ''
+                                }`}
+                        >
+                            <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-lg">
+                                    {conversation.avatar || conversation.name?.charAt(0) || '👤'}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="font-medium text-gray-900 truncate">
+                                            {conversation.name || conversation.username || 'Unknown User'}
+                                        </h3>
+                                        <span className="text-xs text-gray-500">
+                                            {formatTimestamp(conversation.updatedAt || conversation.timestamp)}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 truncate mt-1">
+                                        {conversation.lastMessage || 'No messages yet'}
+                                    </p>
+                                </div>
+                                {conversation.unread > 0 && (
+                                    <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                                        <span className="text-xs text-white">{conversation.unread}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Main Chat Area */}
@@ -279,13 +320,13 @@ function App() {
                                 </span>
                             </div>
 
-                            {messages.map((message) => (
-                                <div key={message.id} className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${message.isOwn
+                            {messages.reverse().map((message) => (
+                                <div key={message.id} className={`flex ${message.sendBy !== 14 ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${message.sendBy !== 14
                                         ? 'bg-orange-400 text-white'
                                         : 'bg-orange-100 text-gray-800'
                                         } shadow-sm ${message.pending ? 'opacity-70' : ''}`}>
-                                        <p className="text-sm">{message.text || message.content}</p>
+                                        <p className="text-sm">{message.message}</p>
                                         <div className="flex items-center justify-end mt-1 space-x-1">
                                             <span className={`text-xs ${message.isOwn ? 'text-orange-100' : 'text-gray-500'}`}>
                                                 {message.timestamp}
@@ -322,12 +363,12 @@ function App() {
                                         onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                                         placeholder="Type your message..."
                                         className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        disabled={!isConnected}
+                                    // disabled={!isConnected}
                                     />
                                 </div>
                                 <button
                                     onClick={sendMessage}
-                                    disabled={!newMessage.trim() || !isConnected}
+                                    // disabled={!newMessage.trim() || !isConnected}
                                     className="p-2 bg-orange-400 hover:bg-orange-500 disabled:bg-gray-300 rounded-full transition-colors"
                                 >
                                     <Send className="w-5 h-5 text-white" />
@@ -351,4 +392,4 @@ function App() {
     );
 }
 
-export default ChatRoom;
+export default ChatTest

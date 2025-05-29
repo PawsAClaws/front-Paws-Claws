@@ -33,6 +33,7 @@ import Loading from './components/Loading';
 import ChatRoom from './pages/chat/ChatRoom';
 // import ChatList from './pages/chat/ChatList';
 import ChatComponent from './pages/ChatTest';
+import ChatTest from './pages/chat/ChatTest';
 
 
 
@@ -76,7 +77,8 @@ export default function App() {
 
 
 
-        { path: "chatRoom", element: <ChatRoom /> },
+        { path: "chatRoom/:id?", element: <ChatRoom /> },
+        { path: "chatTest/:id?", element: <ChatTest /> },
         // { path: "chatList", element: <ChatList /> },
 
 
