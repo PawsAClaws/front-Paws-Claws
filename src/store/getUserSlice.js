@@ -23,8 +23,6 @@ export const getUserData = createAsyncThunk("users/fetchUsers", async () => {
 
 
 
-
-
 const userSlice = createSlice({
 
 

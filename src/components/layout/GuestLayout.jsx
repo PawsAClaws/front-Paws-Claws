@@ -1,8 +1,8 @@
 import React from 'react';
-import Navbar from '../nav/Navbar';
 import { Outlet } from 'react-router-dom';
 import Footer from '../Footer';
 import NavbarLogin from '../NavbarLogin';
+
 
 const GuestLayout = () => {
     return (

@@ -1,19 +1,17 @@
 import React from 'react'
 import { FacebookLogo, X, InstagramLogo, Phone, EnvelopeSimple, MapPin } from "phosphor-react";
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
-
-
+    const { t } = useTranslation();
 
     return (
-
         <div className='bg-[#111827] '>
-
             <div className='container mx-auto flex-col md:flex-row items-center justify-between flex  py-14'>
 
                 <div className='flex flex-col gap-8 items-center mb-7'>
-                    <p className='text-white mb-4'>PetCare</p>
-                    <span className='text-[#9CA3AF]'> Your one-stop solution for all pet care needs </span>
+                    <p className='text-white mb-4'>{t('footer.petCare')}</p>
+                    <span className='text-[#9CA3AF]'>{t('footer.p_1')}</span>
                     <div className='text-[#9CA3AF] flex gap-4 text-2xl'>
                         <FacebookLogo />
                         <X />
@@ -21,29 +19,28 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className='text-center  mb-7'>
-                    <p className='text-white mb-4'>Quick Links</p>
+                <div className='text-center mb-7'>
+                    <p className='text-white mb-4'>{t('footer.quickLinks')}</p>
                     <ul className='flex flex-col gap-4 text-[#9CA3AF]'>
-                        <li>About Us</li>
-                        <li>Services</li>
-                        <li>Shop</li>
-                        <li>Contact</li>
+                        <li>{t('footer.aboutUs')}</li>
+                        <li>{t('footer.services')}</li>
+                        <li>{t('footer.shop')}</li>
+                        <li>{t('footer.contactUs')}</li>
                     </ul>
                 </div>
 
-                <div className='text-center  mb-7'>
-                    <p className='text-white mb-4'>Services</p>
+                <div className='text-center mb-7'>
+                    <p className='text-white mb-4'>{t('footer.services')}</p>
                     <ul className='flex flex-col gap-4 text-[#9CA3AF]'>
-                        <li>Veterinary Care</li>
-                        <li>Pet Supplies</li>
-                        <li>Adoption</li>
-                        <li>Marketplace</li>
+                        <li>{t('footer.veterinaryCare')}</li>
+                        <li>{t('footer.petSupplies')}</li>
+                        <li>{t('footer.adoption')}</li>
+                        <li>{t('footer.marketplace')}</li>
                     </ul>
                 </div>
 
-
-                <div className='text-center  mb-7'>
-                    <p className='text-white mb-4'>Contact Us</p>
+                <div className='text-center mb-7'>
+                    <p className='text-white mb-4'>{t('footer.contactUs')}</p>
 
                     <div className='flex flex-col gap-3'>
                         <div className='text-[#9CA3AF] flex items-center gap-1'>
@@ -61,15 +58,11 @@ export default function Footer() {
                             <div className='text-[#9CA3AF]'>123 Pet Street, City</div>
                         </div>
                     </div>
-
                 </div>
-
-
 
             </div>
 
             <div className='text-center text-[#9CA3AF] border-t py-4'> © 2025 PetCare. All rights reserved. </div>
-
         </div>
     )
 }

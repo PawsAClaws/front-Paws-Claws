@@ -49,18 +49,12 @@ const Search = () => {
         }
     }
 
-    // useEffect(() => {
-    //     if (searchTerm.trim() === "") {
-    //         dispatch(clearSearch())
-    //         navigate("/home")
-    //     }
-    // }, [searchTerm, dispatch, navigate])
 
 
     return (
 
         <div>
-            <div className="relative border border-[#FBF0E7] rounded-lg w-[150px] md:w-[288px]">
+            <div className="relative border border-[#FBF0E7] rounded-lg w-[300px] lg:w-[500px]">
                 <button
                     onClick={handleSearch}
                     className="absolute cursor-pointer inset-y-0.5 end-0 rounded-lg text-white w-8 h-8 bg-primary flex items-center justify-center"
@@ -71,7 +65,7 @@ const Search = () => {
                 </button>
                 <input
                     type="search"
-                    className="block w-full p-2 ps-4 text-sm"
+                    className="block w-full p-2 ps-4 text-sm rounded-xl"
                     placeholder="Search"
                     value={searchTerm}
                     onChange={handleChange}

@@ -3,21 +3,25 @@ import { Search } from 'lucide-react'
 import { fetchConversations } from './useChat'
 import myImg from '../../assets/avatar.png'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-const Sidebar = ({ id }) => {
+const Sidebar = ({ setShowChat, setSelectedUser }) => {
     const [conversations, setConversations] = useState([])
     const navigate = useNavigate()
     const location = useLocation()
     const searchParams = new URLSearchParams(location.search)
     const selectedConversationId = searchParams.get('conversationId')
 
+    const userData = useSelector((state) => state.getUser.user);
+
+    console.log(userData);
 
     useEffect(() => {
         const getConversations = async () => {
             try {
                 const response = await fetchConversations()
                 const processedData = response.map(item => ({
-                    ...item.receiverId === id ? item.sender : item.receiver,
+                    ...item.receiverId === userData.id ? item.sender : item.receiver,
                     conversationId: item.id, // important!
                     lastMessage: item.lastMessage,
                     unread: item.unread,
@@ -28,15 +32,29 @@ const Sidebar = ({ id }) => {
                 console.error(error)
             }
         }
-        getConversations()
-    }, [id])
 
-    const handleClick = (conversationId) => {
-        navigate(`?conversationId=${conversationId}`)
+        if (userData.id)
+            getConversations()
+
+    }, [userData.id])
+
+    const handleClick = (conversationId, senderId) => {
+        navigate(`/chatRoom/${senderId}?conversationId=${conversationId}`)
+
+        const selectedConversation = conversations.find(conv => conv.conversationId === conversationId);
+        if (selectedConversation && setSelectedUser) {
+            setSelectedUser(selectedConversation);
+        }
+
+        if (setShowChat) {
+            setShowChat(true)
+        }
     }
 
+    console.log(conversations);
+
     return (
-        <div className="p-4 border-b border-gray-200 w-[400px]">
+        <div className="p-4 border-r border-[#BCBCBC] w-full h-full">
             {/* Header */}
             <div className="relative mb-4">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -52,7 +70,7 @@ const Sidebar = ({ id }) => {
                 {conversations.map((conversation) => (
                     <div
                         key={conversation.conversationId}
-                        onClick={() => handleClick(conversation.conversationId)}
+                        onClick={() => handleClick(conversation.conversationId, conversation.id)}
                         className={`p-4 border-b border-gray-100 cursor-pointer transition-colors rounded-lg mb-2 ${selectedConversationId === conversation.conversationId.toString() ? 'bg-[#FBF0E7]' : 'hover:bg-gray-50'
                             }`}
                     >

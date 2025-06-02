@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "wishlist": "Wishlist",
+    "notifications": "Notifications",
+    "myAccount": "My Account",
+    "postYourAd": "Post Your Ad",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "home": "Home",
+    "animals": "Animals",
+    "adoption": "Adoption",
+    "shop": "Shop",
+    "doctor": "Doctor",
+    "doctors": "Doctors",
+    "nearestVet": "Nearest Vet"
+  },
+  "menu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "myAds": "My Ads",
+    "myDocPage": "My Doc Page",
+    "becomeDoctor": "Become a Doctor",
+    "needHelp": "Need Help?"
+  },
+  "user": {
+    "user": "User"
+  },
+  "language": {
+    "arabic": "العربية",
+    "english": "English"
+  },
+  "home": {
+    "adoptionPets": "Adoption Pets",
+    "salePets": "Sale Pets",
+    "shopPets": "Shop Pets",
+    "doctor": "Doctors",
+    "seeAll": "See All"
+  },
+  "postDetails": {
+    "free": "Free",
+    "description": "description",
+    "listedBy": "Listed by",
+    "viewProfile": "View profile",
+    "mayAlsoLike": "You may also like",
+    "safety": "Your safety matters to us!",
+    "tips": [
+      "Only meet in public / crowded places",
+      "Never go alone to meet a buyer / seller, always take someone with you",
+      "Check and inspect the product properly before purchasing it.",
+      "Never pay anything in advance or transfer money before inspecting the product"
+    ],
+    "chat": "Chat",
+    "sms": "SMS",
+    "call": "Call"
+  },
+  "category": {
+    "dogs": "Dogs",
+    "birds": "Birds",
+    "cats": "Cats",
+    "Fishes": "Fishes",
+    "turtles": "Turtles",
+    "Others": "Others"
+  },
+  "createAd": {
+    "sell": "Sell",
+    "adoption": "Adoption",
+    "shop": "Shop",
+    "addImage": "Add Image",
+    "gender": "Gender",
+    "age": "Age",
+    "add title": "Add title",
+    "location": "Location",
+    "description": "Description",
+    "price": "Price",
+    "submit": "add your ad",
+    "Negotiable": "Negotiable",
+    "not negotiable": "Not Negotiable"
+  },
+  "footer": {
+    "petCare": "Pet Care",
+    "p_1": "Your one-stop solution for all pet care needs",
+    "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "services": "Services",
+    "shop": "Shop",
+    "veterinaryCare": "Veterinary Care",
+    "petSupplies": "Pet Supplies",
+    "adoption": "Adoption",
+    "marketplace": "Marketplace",
+    "contactUs": "Contact Us"
+  }
+}

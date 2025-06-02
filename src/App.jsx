@@ -1,6 +1,7 @@
 import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router-dom';
 import React from 'react';
 import GuestLayout from './components/layout/GuestLayout';
+import UserLayout from './components/layout/UserLayout';
 import Home from './pages/Home';
 import HomeLogin from './pages/HomeLogin';
 import Login from './pages/Login';
@@ -28,100 +29,81 @@ import DoctorPage from './pages/DoctorPage';
 import BecomeDoctor from './components/BecomeDoctor';
 import BookingSteps from './components/BookingSteps';
 import DoctorMap from './pages/DoctorMap';
-import Chat from './pages/Chat';
-import Loading from './components/Loading';
 import ChatRoom from './pages/chat/ChatRoom';
-// import ChatList from './pages/chat/ChatList';
-import ChatComponent from './pages/ChatTest';
-import ChatTest from './pages/chat/ChatTest';
-
-
-
+import ProtectedRoute from './components/protectedRoutes/ProutectedRoutes';
+import './i18n';
+// import UserProfile from './pages/UserProfile';
 
 
 
 export default function App() {
-
-
-
   const routes = createBrowserRouter([
-
-    // GuestLayout
+    // GuestLayout 
     {
-      path: '/', element: <GuestLayout />,
+      path: '/',
+      element: <GuestLayout />,
       children: [
         { index: true, element: <Home /> },
-        { path: 'home', element: <HomeLogin /> },
-
         { path: 'terms', element: <Terms /> },
         { path: 'policy', element: <Policy /> },
         { path: 'about', element: <About /> },
-        { path: 'createPost/:id', element: <CreatePost /> },
-        { path: 'postDetails/:id', element: <PostDetails /> },
         { path: 'adoption', element: <Adoption /> },
         { path: 'animals', element: <Animals /> },
         { path: 'doctors', element: <Doctors /> },
         { path: 'shop', element: <Shop /> },
-        { path: 'categories', element: <Categories /> },
-        { path: 'profile', element: <Profile /> },
         { path: "search", element: <SearchItems /> },
-        { path: "myWishlist", element: <MyWishLists /> },
-        { path: "editProfile", element: <EditProfile /> },
-        { path: "doctors", element: <Doctors /> },
-        { path: "doctorDetail/:id", element: <DoctorDetails /> },
-        { path: "doctorPage", element: <DoctorPage /> },
-        { path: "becomeDoctor", element: <BecomeDoctor /> },
-        { path: "booking", element: <BookingSteps /> },
         { path: "doctorMap", element: <DoctorMap /> },
-        { path: "chat", element: <ChatComponent /> },
-
-
-
-        { path: "chatRoom/:id?", element: <ChatRoom /> },
-        { path: "chatTest/:id?", element: <ChatTest /> },
-        // { path: "chatList", element: <ChatList /> },
-
-
-
-
-
-
-
-
         { path: '*', element: <NotFound /> },
       ]
     },
 
-    // UserLayout
-    // {
-    //   element: <UserLayout />,
-    //   children: [
-    //     { path: '/home', element: <HomeLogin /> },
-
-    //   ]
-    // },
-
-
+    // UserLayout   
     {
-      path: 'login', element: <Login />
+      path: '/',
+      element: (
+        <ProtectedRoute>
+          <UserLayout />
+        </ProtectedRoute>
+      ),
+      children: [
+        { path: 'home', element: <HomeLogin /> },
+        { path: 'createPost/:id', element: <CreatePost /> },
+        { path: 'postDetails/:id', element: <PostDetails /> },
+        { path: 'categories', element: <Categories /> },
+        { path: 'profile', element: <Profile /> },
+        { path: "myWishlist", element: <MyWishLists /> },
+        { path: "editProfile", element: <EditProfile /> },
+        { path: "doctorDetail/:id", element: <DoctorDetails /> },
+        // { path: "userProfile/:id", element: <UserProfile /> },
+        { path: "doctorPage", element: <DoctorPage /> },
+        { path: "becomeDoctor", element: <BecomeDoctor /> },
+        { path: "booking", element: <BookingSteps /> },
+        { path: "chatRoom/:id?", element: <ChatRoom /> },
+      ]
+    },
+
+    // Authentication Routes
+    {
+      path: 'login',
+      element: <Login />
     },
     {
-      path: 'register', element: <Register />
+      path: 'register',
+      element: <Register />
     },
     {
-      path: 'forgetPassword', element: <ForgetPassword />
+      path: 'forgetPassword',
+      element: <ForgetPassword />
     },
     {
-      path: 'resetPassword/:token', element: <ResetPassword />
+      path: 'resetPassword/:token',
+      element: <ResetPassword />
     },
-
   ]);
 
   return (
     <div className='font-Quicksand'>
-
       <RouterProvider router={routes} />
-
       <ToastContainer theme='colored' autoClose={1200} />
     </div>
   );

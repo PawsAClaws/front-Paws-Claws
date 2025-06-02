@@ -80,30 +80,37 @@ export default function DoctorsHome() {
 
                         <SwiperSlide key={index} className=' max-w-[430px]  '>
 
+
+
                             <div className=' mt-9 w-full h-full  overflow-hidden  rounded-lg relative'>
 
                                 <img className='w-full h-[300px] rounded-t-lg' src={doc.card} alt={doc.realName} />
 
                                 <div className='flex flex-col gap-4  px-4 pt-4 pb-2 border rounded-b-lg border-[#E5E7EB] '>
 
-                                    <h5 className='text-lg font-semibold'> Dr. {doc.realName} </h5>
-                                    <p className='text-gray-600'> speciality {doc.speciality} </p>
-                                    <div className='flex gap-2 items-center'>
-                                        <div className='flex gap-1 text-[#FBBF24]'>
-                                            <Star />
-                                            <Star />
-                                            <Star />
-                                            <Star />
-                                            <Star />
+                                    <Link to={`/doctorDetail/${doc.id}`}>
+                                        <h5 className='text-lg font-semibold'> Dr. {doc.realName} </h5>
+                                        <p className='text-gray-600'> speciality {doc.speciality} </p>
+                                        <div className='flex gap-2 items-center'>
+                                            <div className='flex gap-1 text-[#FBBF24]'>
+                                                <Star />
+                                                <Star />
+                                                <Star />
+                                                <Star />
+                                                <Star />
+                                            </div>
+                                            <p>5</p>
                                         </div>
-                                        <p>5</p>
-                                    </div>
-                                    <button className='text-white cursor-pointer bg-primary w-full py-2 rounded-2xl'>
-                                        Book Appointment
-                                    </button>
+                                    </Link>
+
+
+                                    <Link to="/booking"
+                                        state={{ doctorId: doc.id }}
+                                        className='bg-primary text-center rounded-[8px] w-[90%] text-white py-2.5 mt-5 cursor-pointer'> Book Appointment </Link>
                                 </div>
 
                             </div>
+
 
                         </SwiperSlide>
 
