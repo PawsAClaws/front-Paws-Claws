@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Send, Paperclip, Ellipsis, ArrowLeft } from 'lucide-react';
+import { Send, Paperclip, Ellipsis, ArrowLeft, CheckCheck } from 'lucide-react';
 
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
@@ -7,10 +7,12 @@ import { cookies } from '../../lib/api';
 import { fetchMessages } from './useChat';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import avatar from '../../assets/avatar.png'
+import { getUserId } from '../../lib/getUserId';
 
 const ChatArea = ({ setShowChat, selectedUser }) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [reverser, setReverser] = useState(null);
     const [socket, setSocket] = useState(null);
     const userData = useSelector((state) => state.getUser.user);
     const senderId = userData.id;
@@ -50,6 +52,25 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
             getMessages();
         }
     }, [conversationId]);
+
+    useEffect(()=>{
+        if(id && !selectedUser){
+            const user = async()=> {
+                const res =  await getUserId(id)
+                setReverser(res)
+            }
+            user()
+        }
+        else if(selectedUser) {
+            setReverser(selectedUser)
+        }
+    },[id,selectedUser])
+
+    useEffect(()=>{
+        if(socket && id){
+            socket.emit("seen",{receiverId: +id})
+        }
+    },[id,socket])
 
     useEffect(() => {
         if (!socket) return;
@@ -91,6 +112,7 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
     const reversedMessages = [...messages];
 
     console.log(reversedMessages);
+    console.log(reverser);
 
     return (
         <div className='w-full h-full flex flex-col'>
@@ -105,11 +127,11 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
                     </button>
 
                     <div className='w-[50px] h-[50px]'>
-                        <img className='w-full h-full rounded-full' src={selectedUser?.photo || avatar} alt="avatar" />
+                        <img className='w-full h-full rounded-full' src={reverser?.photo || avatar} alt="avatar" />
                     </div>
                     <div>
-                        <h3>{selectedUser ? `${selectedUser.firstName} ${selectedUser.lastName}` : 'User Name'}</h3>
-                        <div>{selectedUser?.email || 'alexarawles@gmail.com'}</div>
+                        <h3>{reverser ? `${reverser.firstName} ${reverser.lastName}` : 'User Name'}</h3>
+                        <div>{reverser?.email || 'alexarawles@gmail.com'}</div>
                     </div>
                 </div>
 
@@ -133,11 +155,14 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
                                     : 'bg-orange-100 text-gray-800'
                                     } shadow-sm ${message.pending ? 'opacity-70' : ''}`}>
 
-                                    <div className='flex gap-2 items-center'>
+                                    <div className={`flex relative ${message.sendBy === senderId ? 'flex-row-reverse' : ''} gap-2 items-center`}>
                                         <div className='min-w-[30px] h-[30px]'>
                                             <img className='w-full h-full rounded-full' src={message?.send?.photo ? message?.send?.photo : avatar} alt="" />
                                         </div>
                                         <p className="text-sm">{message.message}</p>
+                                        <p className={`text-sm ${message.seen ? 'text-green-500' : 'text-gray-500'} absolute -bottom-2 ${message.sendBy !== senderId ? '-right-2' : '-left-2'}`}>
+                                            <CheckCheck size={15}/>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
