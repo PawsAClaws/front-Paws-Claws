@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useQuery } from '@tanstack/react-query';
 import ReactPaginate from "react-paginate";
 import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
@@ -6,15 +7,10 @@ import Card from "../components/Card";
 import Loading from "../components/Loading";
 import Filter from "../components/Filter";
 
-
 const itemsPerPage = 24;
 
-
 export default function Adoption() {
-
     const [currentPage, setCurrentPage] = useState(0);
-    const [allAdoptions, setAllAdoptions] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState(null);
     const [filters, setFilters] = useState({
         minPrice: '',
@@ -25,6 +21,25 @@ export default function Adoption() {
     });
 
     const adoption = "adoption";
+
+    // React Query hook للداتا
+    const {
+        data: adoptionsData,
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: ['adoptions', adoption],
+        queryFn: () => fetchPages(adoption),
+        select: (data) => data?.posts || [],
+        staleTime: Infinity, // الداتا مش هتبقى stale أبداً
+        cacheTime: 30 * 60 * 1000, // 30 minutes cache
+        refetchOnMount: false, // مش هيعمل refetch لما الكومبوننت يتعمل mount
+        refetchOnWindowFocus: false, // مش هيعمل refetch لما نرجع للتاب
+        refetchOnReconnect: false, // مش هيعمل refetch لما الإنترنت يرجع
+        refetchInterval: false, // مش هيعمل refetch تلقائي
+    });
+
+    const allAdoptions = adoptionsData || [];
 
     const filteredItems = allAdoptions.filter(item => {
         let isValid = true;
@@ -60,52 +75,26 @@ export default function Adoption() {
     const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
     const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
 
-
-
-
-
-    useEffect(() => {
-
-        const getAdptionsData = async () => {
-
-            try {
-                const data = await fetchPages(adoption);
-
-                setAllAdoptions(data.posts);
-
-
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        getAdptionsData();
-    }, [])
-
-
-
-
-
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
 
+    if (isLoading) return <Loading />;
 
-    { if (isLoading) return <Loading />; }
-
+    if (error) {
+        console.error('Error fetching adoptions:', error);
+        return <div>Error loading adoptions data</div>;
+    }
 
     return (
-
         <div className="bg-bg-app pb-16">
-
-
             <div className="container mx-auto ">
-
-
-                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} filters={filters} setFilters={setFilters} />
-
+                <Filter
+                    activeFilter={activeFilter}
+                    setActiveFilter={setActiveFilter}
+                    filters={filters}
+                    setFilters={setFilters}
+                />
 
                 {/* Sort Section */}
                 <div className="flex justify-between items-center my-8">
@@ -116,19 +105,13 @@ export default function Adoption() {
                 </div>
 
                 {/* Image Grid */}
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
-
                     {currentItems.map((item, index) => (
-
                         <Card key={index} data={item} />
-
                     ))}
-
                 </div>
 
                 {/* Pagination */}
-
                 <div className="flex justify-center mt-9">
                     <ReactPaginate
                         previousLabel={<CaretLeft />}
@@ -143,10 +126,7 @@ export default function Adoption() {
                         disabledClassName={"opacity-50 cursor-not-allowed"}
                     />
                 </div>
-
-            </div >
-
+            </div>
         </div>
-
     );
 }

@@ -54,7 +54,7 @@ const Search = () => {
     return (
 
         <div>
-            <div className="relative border border-[#FBF0E7] rounded-lg w-[300px] lg:w-[500px]">
+            <div className="relative border border-[#FBF0E7] rounded-lg w-[200px] sm:w-[300px] md:w-[400px] lg:w-[300px]  xl:w-[400px]">
                 <button
                     onClick={handleSearch}
                     className="absolute cursor-pointer inset-y-0.5 end-0 rounded-lg text-white w-8 h-8 bg-primary flex items-center justify-center"

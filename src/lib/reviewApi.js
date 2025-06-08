@@ -4,11 +4,13 @@ import BASE_URL, { cookies } from "./api";
 
 
 
-const token = cookies.get("token");
+
 
 
 
 export const fetchgetreview = async (id) => {
+
+    const token = cookies.get("token");
 
     try {
 
@@ -27,6 +29,8 @@ export const fetchgetreview = async (id) => {
 
 
 export const fetchAddReview = async (id, comment, rating) => {
+
+    const token = cookies.get("token");
 
     try {
 

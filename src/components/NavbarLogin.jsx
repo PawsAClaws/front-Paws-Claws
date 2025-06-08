@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import logo from '../assets/logo.png'
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -7,15 +8,12 @@ import avatar from '../assets/avatar.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Search from './Search';
 import { useDispatch, useSelector } from "react-redux";
-import { getAllWishList } from "../store/wishlist.js";
-import { getUserData } from '../store/getUserSlice.js';
-import MobileNav from './nav/MobileNav.jsx';
 import { togleCard } from '../store/becomeDoctorSlice.js';
 import NotificationsCard from './NotificationsCard.jsx';
-import { fetchNotifications } from '../store/notificationsSlice.js';
 import { cookies } from '../lib/api.js';
 import { fetchMyDoc } from '../lib/getMyDoc.js';
 import { useTranslation } from 'react-i18next';
+import MobileNav from './nav/MobileNav.jsx';
 
 export default function NavbarLogin() {
     const { t, i18n } = useTranslation();
@@ -24,42 +22,93 @@ export default function NavbarLogin() {
     const menuRef = useRef(null);
     const navigate = useNavigate()
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-    const [checkDoc, setCheckDoc] = useState(false);
 
     const dispatch = useDispatch();
-    const wishlistItems = useSelector((state) => state.getWishlist.items);
-    const userData = useSelector((state) => state.getUser.user);
-    const notificationsList = useSelector((state) => state.notifications);
-    console.log(userData);
+    const queryClient = useQueryClient();
 
     const token = cookies.get('token');
+
+    // Wishlist Query
+    const { data: wishlistItems = [] } = useQuery({
+        queryKey: ['wishlist'],
+        queryFn: async () => {
+            const { getAllWishList } = await import('../store/wishlist.js');
+            const result = await dispatch(getAllWishList()).unwrap();
+            return result || [];
+        },
+        enabled: !!token, //
+        staleTime: 2 * 60 * 1000,
+        cacheTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
+
+    // User Data Query
+    const { data: userData = {} } = useQuery({
+        queryKey: ['user', 'profile'],
+        queryFn: async () => {
+            const { getUserData } = await import('../store/getUserSlice.js');
+            const result = await dispatch(getUserData()).unwrap();
+            return result || {};
+        },
+        enabled: !!token,
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 10 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
+
+    // Notifications Query
+    const { data: notificationsList = { unreadCount: 0, notifications: [] } } = useQuery({
+        queryKey: ['notifications'],
+        queryFn: async () => {
+            const { fetchNotifications } = await import('../store/notificationsSlice.js');
+            const result = await dispatch(fetchNotifications()).unwrap();
+            return result || { unreadCount: 0, notifications: [] };
+        },
+        enabled: !!token,
+        staleTime: 1 * 60 * 1000,
+        cacheTime: 3 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchInterval: 2 * 60 * 1000,
+    });
+
+    // Doctor Status Query
+    const { data: checkDoc = false } = useQuery({
+        queryKey: ['doctor', 'status'],
+        queryFn: async () => {
+            const res = await fetchMyDoc();
+            console.log(res.data);
+            return res.data.active || false;
+        },
+        enabled: !!token,
+        staleTime: 10 * 60 * 1000,
+        cacheTime: 15 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
+
+    console.log(userData);
 
     // Language toggle function
     const toggleLanguage = () => {
         const newLang = i18n.language === 'ar' ? 'en' : 'ar';
         i18n.changeLanguage(newLang);
 
-        // Update document direction for RTL/LTR
+
         document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
         document.documentElement.lang = newLang;
     };
 
-    // Set initial direction based on current language
+
     useEffect(() => {
         document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
         document.documentElement.lang = i18n.language;
     }, [i18n.language]);
 
     function handleSignOut() {
-        cookies.remove('token')
-        navigate('/login')
+        // Clear all queries from cache when user signs out
+        queryClient.clear();
+        cookies.remove('token');
+        navigate('/login');
     }
-
-    useEffect(() => {
-        dispatch(getAllWishList());
-        dispatch(getUserData());
-        dispatch(fetchNotifications());
-    }, [dispatch]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -75,20 +124,13 @@ export default function NavbarLogin() {
         };
     }, []);
 
-    useEffect(() => {
-        const handleMyDoc = async () => {
-            const res = await fetchMyDoc();
-            console.log(res.data);
-
-            if (res.data.active) {
-                setCheckDoc(true);
-            } else {
-                setCheckDoc(false);
-            }
+    // Helper function to get wishlist count
+    const getWishlistCount = () => {
+        if (Array.isArray(wishlistItems)) {
+            return wishlistItems.length;
         }
-
-        handleMyDoc();
-    }, []);
+        return wishlistItems?.items?.length || 0;
+    };
 
     return (
         <div>
@@ -118,9 +160,9 @@ export default function NavbarLogin() {
                                     {t('nav.wishlist')}
                                     <span className="relative">
                                         <Heart className='inline-block' />
-                                        {wishlistItems.length > 0 && (
+                                        {getWishlistCount() > 0 && (
                                             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                                                {wishlistItems.length}
+                                                {getWishlistCount()}
                                             </span>
                                         )}
                                     </span>
@@ -281,11 +323,9 @@ export default function NavbarLogin() {
                             </ul>
                         </div>
 
-                        {token ? (
-                            <Link to="categories" className="bg-[#FEA230] cursor-pointer hidden lg:flex text-white rounded-lg py-2 px-[18px]">
-                                {t('nav.postYourAd')}
-                            </Link>
-                        ) : ''}
+                        <Link to="categories" className="bg-[#FEA230] cursor-pointer hidden lg:flex text-white rounded-lg py-2 px-[18px]">
+                            {t('nav.postYourAd')}
+                        </Link>
                     </div>
                 </div>
 

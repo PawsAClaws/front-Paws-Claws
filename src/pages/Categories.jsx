@@ -74,7 +74,7 @@ const Categories = () => {
                     return (
                         <div className='flex  justify-between items-center gap-3' key={index}>
 
-                            <div onClick={() => handleClick(item.id)} className={`flex p-6 hover:bg-[#FBF0E7] cursor-pointer border-b-[0.5px] w-full border-black justify-between ${index % 2 === 0 ? ' md:border-e' : ''} `}>
+                            <div onClick={() => handleClick(item.id)} className={`flex p-6 hover:bg-[#FBF0E7] items-center cursor-pointer border-b-[0.5px] w-full border-black justify-between ${index % 2 === 0 ? ' md:border-e' : ''} `}>
 
                                 <div className='flex items-center gap-4'>
                                     <div className='bg-primary w-20'>

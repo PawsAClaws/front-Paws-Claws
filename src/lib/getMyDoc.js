@@ -3,10 +3,12 @@ import axios from "axios";
 import BASE_URL, { cookies } from "./api";
 
 
-const token = cookies.get("token");
+
 
 
 export const fetchMyDoc = async () => {
+
+    const token = cookies.get("token");
 
 
 

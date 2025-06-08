@@ -189,7 +189,7 @@ export default function CreatePost() {
                                             key={type}
 
                                             onClick={() => formik.setFieldValue("type", type)}
-                                            className={`py-1.5 cursor-pointer flex items-center justify-center w-1/3 rounded-[90px] transition-all duration-500 ${formik.values.type === type ? "bg-primary text-white" : "bg-transparent text-black"
+                                            className={`py-2.5 cursor-pointer flex items-center justify-center w-1/3 rounded-[90px] transition-all duration-500 ${formik.values.type === type ? "bg-primary text-white" : "bg-transparent text-black"
                                                 }`}
                                         >
                                             <p>{type.charAt(0).toUpperCase() + type.slice(1)}</p>
@@ -388,7 +388,7 @@ export default function CreatePost() {
 
 
                         <div className='flex justify-center mt-12'>
-                            <button type='submit' className='bg-primary cursor-pointer w-full md:w-[40%] lg:w-[30%] mb-7 text-white rounded-[22px] px-4 py-3'> post your ad </button>
+                            <button type='submit' className='bg-primary capitalize cursor-pointer w-full md:w-[40%] lg:w-[30%] mb-7 text-white rounded-[8px] px-4 py-3'> post your ad </button>
 
                         </div>
 

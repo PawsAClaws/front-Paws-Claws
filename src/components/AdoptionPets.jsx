@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from '@tanstack/react-query';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ArrowRight } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
@@ -6,55 +7,45 @@ import Card from "./Card";
 import { Link } from "react-router-dom";
 import Loading from '../components/Loading';
 
-
-
 export default function AdoptionPets({ data }) {
-
     const adoption = "adoption";
 
-    const [allAdoptions, setAllAdoptions] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const {
+        data: adoptionsData,
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: ['adoptions', adoption],
+        queryFn: () => fetchPages(adoption),
+        select: (data) => data?.posts || [],
+        staleTime: Infinity,
+        cacheTime: 30 * 60 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchInterval: false,
+    });
 
-    useEffect(() => {
+    if (isLoading) return <Loading />;
 
-        const getAdptionsData = async () => {
+    if (error) {
+        console.error('Error fetching adoptions:', error);
+        return <div>Error loading adoptions data</div>;
+    }
 
-            try {
-                const data = await fetchPages(adoption);
-
-                setAllAdoptions(data.posts);
-
-
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }
-
-
-        }
-
-        getAdptionsData();
-    }, [])
-
-
-    if (loading) return <Loading />;
+    const allAdoptions = adoptionsData || [];
 
     return (
         <div className=''>
-
             <div className=' container mx-auto  pt-8'>
-
-
                 <div className='flex justify-between items-center mt-9 mb-5'>
-
                     <h3 className=" text-xl md:text-3xl font-bold"> Pets for  Adoption  </h3>
-                    <Link to="/adoption" className='text-primary cursor-pointer text-2xl'>See All <ArrowRight className='inline-block ' /></Link>
-
+                    <Link to="/adoption" className='text-primary cursor-pointer text-2xl'>
+                        See All <ArrowRight className='inline-block ' />
+                    </Link>
                 </div>
 
                 <Swiper
-
                     spaceBetween={10}
                     slidesPerView={6}
                     breakpoints={{
@@ -81,24 +72,13 @@ export default function AdoptionPets({ data }) {
                         }
                     }}
                 >
-
                     {allAdoptions.map((item, index) => (
-
-                        <SwiperSlide key={index} className='max-w-[430px]' >
-
+                        <SwiperSlide key={index} className='max-w-[430px]'>
                             <Card key={index} data={item} />
-
                         </SwiperSlide>
-
-                    ))
-
-                    }
-
-
+                    ))}
                 </Swiper>
-
             </div>
-
         </div>
     )
 }

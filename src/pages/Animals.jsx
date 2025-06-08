@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useQuery } from '@tanstack/react-query';
 import ReactPaginate from "react-paginate";
 import { CaretRight, CaretLeft } from "phosphor-react";
 import { fetchPages } from "../lib/PagesApi";
@@ -9,14 +10,8 @@ import Loading from "../components/Loading";
 const itemsPerPage = 24;
 
 export default function Animals() {
-
     const [currentPage, setCurrentPage] = useState(0);
-
-    const [allSell, setAllSell] = useState([]);
     const [activeFilter, setActiveFilter] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-
     const [filters, setFilters] = useState({
         minPrice: '',
         maxPrice: '',
@@ -25,8 +20,26 @@ export default function Animals() {
         postedAt: ''
     });
 
+    const sell = "sale";
 
 
+    const {
+        data: sellData,
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: ['animals', sell],
+        queryFn: () => fetchPages(sell),
+        select: (data) => data?.posts || [],
+        staleTime: Infinity,
+        cacheTime: 30 * 60 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchInterval: false,
+    });
+
+    const allSell = sellData || [];
 
     const filteredItems = allSell.filter(item => {
         let isValid = true;
@@ -58,56 +71,31 @@ export default function Animals() {
         return isValid;
     });
 
-
-
-
-
-    const sell = "sale";
-
     const offset = currentPage * itemsPerPage;
     const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
     const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
-
-
-    useEffect(() => {
-
-        const getSellData = async () => {
-
-            try {
-                const data = await fetchPages(sell);
-
-                setAllSell(data.posts);
-
-            } catch (error) {
-                console.log(error);
-            }
-            finally {
-                setIsLoading(false);
-            }
-        }
-
-        getSellData();
-    }, [])
 
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
 
+    if (isLoading) return <Loading />;
 
-    { if (isLoading) return <Loading />; }
-
+    if (error) {
+        console.error('Error fetching animals:', error);
+        return <div>Error loading animals data</div>;
+    }
 
     return (
-
         <div className="bg-[#F9FAFB] pb-16">
-
-
             <div className="container mx-auto ">
-
-
                 {/* Filters and Post Ad */}
-
-                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} filters={filters} setFilters={setFilters} />
+                <Filter
+                    activeFilter={activeFilter}
+                    setActiveFilter={setActiveFilter}
+                    filters={filters}
+                    setFilters={setFilters}
+                />
 
                 {/* Sort Section */}
                 <div className="flex justify-between items-center my-8">
@@ -120,9 +108,7 @@ export default function Animals() {
                 {/* Image Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
                     {currentItems.map((item, index) => (
-
                         <Card key={index} data={item} />
-
                     ))}
                 </div>
 
@@ -141,10 +127,7 @@ export default function Animals() {
                         disabledClassName={"opacity-50 cursor-not-allowed"}
                     />
                 </div>
-
-            </div >
-
+            </div>
         </div>
-
     );
 }

@@ -2,12 +2,13 @@
 import axios from "axios";
 import BASE_URL, { cookies } from "./api";
 
-const token = cookies.get("token");
+
 
 // get post Details
 
 export const fetchPostDetails = async (id) => {
 
+    const token = cookies.get("token");
 
     try {
 
@@ -19,7 +20,7 @@ export const fetchPostDetails = async (id) => {
             },
         });
 
-        return result.data
+        return result?.data
 
 
     } catch (error) {

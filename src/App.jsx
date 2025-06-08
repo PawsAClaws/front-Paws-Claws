@@ -32,7 +32,7 @@ import DoctorMap from './pages/DoctorMap';
 import ChatRoom from './pages/chat/ChatRoom';
 import ProtectedRoute from './components/protectedRoutes/ProutectedRoutes';
 import './i18n';
-// import UserProfile from './pages/UserProfile';
+
 
 
 

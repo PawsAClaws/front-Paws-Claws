@@ -1,11 +1,13 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 
 
 
 @theme {
 
     --font-Quicksand: Quicksand, sans-serif;
+    --font-Cairo: Cairo, sans-serif;
 
 
     --color-primary: #FE9030;

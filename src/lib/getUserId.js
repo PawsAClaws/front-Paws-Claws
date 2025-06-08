@@ -4,12 +4,14 @@ import BASE_URL, { cookies } from "./api";
 
 
 
-const token = cookies.get("token");
+
 
 
 
 
 export const getUserId = async (id) => {
+
+    const token = cookies.get("token");
 
     try {
 

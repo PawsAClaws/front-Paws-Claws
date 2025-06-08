@@ -17,6 +17,7 @@ import ShopPets from "../components/ShopPets";
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllWishList } from "../store/wishlist";
+import { Link } from "react-router-dom";
 
 export default function HomeLogin() {
 
@@ -35,19 +36,20 @@ export default function HomeLogin() {
         dispatch(getAllWishList());
     }, []);
 
+
+
     return (
         <div>
             <div className="bg-[#F9FAFB]">
                 <div className="w-full container mx-auto pt-8">
-                    <div className="w-full mb-8 relative">
+                    <div className="w-full mb-8 relative group">
                         <Swiper
                             modules={[Autoplay, Pagination, Navigation]}
                             autoplay={{ delay: 3000, disableOnInteraction: false }}
                             pagination={{ clickable: true }}
                             navigation={true}
                             loop={true}
-                            className="w-full"
-
+                            className="w-full swiper-hidden-nav"
                         >
                             {slides.map((slide, index) => (
                                 <SwiperSlide key={index}>
@@ -74,10 +76,24 @@ export default function HomeLogin() {
                         </Swiper>
 
                         <div className="absolute bottom-0 md:bottom-[5%] right-[10%] md:right-[5%] z-40">
-                            <button className="bg-primary text-sm md:text-md text-white py-2 px-4 md:py-3 md:px-10 cursor-pointer rounded-lg capitalize">
+                            <Link to="/adoption" className="bg-primary text-sm md:text-md text-white py-2 px-4 md:py-3 md:px-10 cursor-pointer rounded-lg capitalize">
                                 adopt today
-                            </button>
+                            </Link>
                         </div>
+
+                        {/* Custom CSS for hiding/showing navigation arrows */}
+                        <style jsx>{`
+                            .group .swiper-button-next,
+                            .group .swiper-button-prev {
+                                opacity: 0;
+                                transition: opacity 0.3s ease;
+                            }
+                            
+                            .group:hover .swiper-button-next,
+                            .group:hover .swiper-button-prev {
+                                opacity: 1;
+                            }
+                        `}</style>
                     </div>
 
                     <div>

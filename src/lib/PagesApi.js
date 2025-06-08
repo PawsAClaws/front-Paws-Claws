@@ -1,12 +1,14 @@
 import axios from "axios";
 import BASE_URL, { cookies } from "./api";
 
-const token = cookies.get("token");
+
 
 
 
 
 export const fetchPages = async (type) => {
+
+    const token = cookies.get("token");
 
     try {
 
@@ -32,6 +34,8 @@ export const fetchPages = async (type) => {
 
 
 export const fetchDeoctors = async () => {
+
+    const token = cookies.get("token");
 
     try {
 

@@ -2,12 +2,14 @@
 import axios from "axios";
 import BASE_URL, { cookies } from "./api";
 
-const token = cookies.get("token");
+
 
 
 // get All categories
 
 export const fetchCategories = async () => {
+
+    const token = cookies.get("token");
 
     try {
         const response = await axios.get(`${BASE_URL}/category`, {
@@ -30,6 +32,8 @@ export const fetchCategories = async () => {
 // get category by id
 
 export const fetchCategoryById = async (id) => {
+
+    const token = cookies.get("token");
 
     try {
         const response = await axios.get(`${BASE_URL}/category/${id}`, {

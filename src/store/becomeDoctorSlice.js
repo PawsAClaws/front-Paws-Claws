@@ -20,14 +20,6 @@ const doctorCardSlice = createSlice({
             state.showCard = !state.showCard
         },
 
-        // showCard: (state) => {
-        //     state.showCard = true;
-        // },
-
-        // hideCard: (state) => {
-        //     state.showCard = false;
-        // },
-
     },
 
 
