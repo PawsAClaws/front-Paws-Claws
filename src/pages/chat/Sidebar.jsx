@@ -39,7 +39,7 @@ const Sidebar = ({ setShowChat, setSelectedUser }) => {
     }, [userData.id])
 
     const handleClick = (conversationId, senderId) => {
-        navigate(`/chatRoom/${senderId}?conversationId=${conversationId}`)
+        navigate(`/chatRoom/${senderId}`)
 
         const selectedConversation = conversations.find(conv => conv.conversationId === conversationId);
         if (selectedConversation && setSelectedUser) {

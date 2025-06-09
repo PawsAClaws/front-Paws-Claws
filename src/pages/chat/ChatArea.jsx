@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import { Send, Paperclip, Ellipsis, ArrowLeft, CheckCheck } from 'lucide-react';
 
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { cookies } from '../../lib/api';
 import { fetchMessages } from './useChat';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import avatar from '../../assets/avatar.png'
 import { getUserId } from '../../lib/getUserId';
+import Message from './Message';
 
 const ChatArea = ({ setShowChat, selectedUser }) => {
     const [messages, setMessages] = useState([]);
@@ -17,13 +18,7 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
     const userData = useSelector((state) => state.getUser.user);
     const senderId = userData.id;
     const token = cookies.get('token');
-    const navigate = useNavigate();
-
     const { id } = useParams()
-
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const conversationId = searchParams.get('conversationId');
 
     useEffect(() => {
         const newSocket = io('https://backend-online-courses.onrender.com', {
@@ -39,10 +34,10 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
     }, [token]);
 
     useEffect(() => {
-        if (conversationId) {
+        if (id) {
             const getMessages = async () => {
                 try {
-                    const response = await fetchMessages(conversationId);
+                    const response = await fetchMessages(id);
                     setMessages(response);
                 } catch (error) {
                     console.error(error);
@@ -51,7 +46,7 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
 
             getMessages();
         }
-    }, [conversationId]);
+    }, [id]);
 
     useEffect(()=>{
         if(id && !selectedUser){
@@ -147,25 +142,10 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
                         <p className="text-gray-500 text-sm">Start your conversation...</p>
                     </div>
                 ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-6">
                         {reversedMessages.map((message, index) => (
-                            <div key={`${message.id || message.timestamp}-${index}`} className={`flex ${message.sendBy !== senderId ? 'justify-start' : 'justify-end'}`}>
-                                <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${message.sendBy === senderId
-                                    ? 'bg-orange-400 text-white'
-                                    : 'bg-orange-100 text-gray-800'
-                                    } shadow-sm ${message.pending ? 'opacity-70' : ''}`}>
-
-                                    <div className={`flex relative ${message.sendBy === senderId ? 'flex-row-reverse' : ''} gap-2 items-center`}>
-                                        <div className='min-w-[30px] h-[30px]'>
-                                            <img className='w-full h-full rounded-full' src={message?.send?.photo ? message?.send?.photo : avatar} alt="" />
-                                        </div>
-                                        <p className="text-sm">{message.message}</p>
-                                        <p className={`text-sm ${message.seen ? 'text-green-500' : 'text-gray-500'} absolute -bottom-2 ${message.sendBy !== senderId ? '-right-2' : '-left-2'}`}>
-                                            <CheckCheck size={15}/>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            <Message key={index} message={message} />
+                            // <></>
                         ))}
                     </div>
                 )}
