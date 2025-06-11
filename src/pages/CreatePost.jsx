@@ -13,6 +13,7 @@ import { fetchCategoryById } from '../lib/categoryApi';
 import BASE_URL, { cookies } from '../lib/api';
 import Loading from "../components/Loading";
 import Location from '../lib/Location';
+import { interval } from 'date-fns';
 
 
 
@@ -92,7 +93,11 @@ export default function CreatePost() {
             },)
 
             console.log(res.data);
-            navigate('/home')
+
+
+
+            navigate('/alertCard', { state: { message: "Paw-some! Your ad was uploaded successfully." } });
+
             toast.success("Post created successfully!");
 
         } catch (error) {

@@ -89,7 +89,6 @@ const DoctorDetails = () => {
 
     const handleMyRate = async () => {
 
-
         try {
             await fetchAddReview(id, myComment, myRating);
             console.log("Review submitted successfully");
@@ -103,7 +102,6 @@ const DoctorDetails = () => {
         } catch (error) {
             console.error(error);
         }
-
 
 
     }

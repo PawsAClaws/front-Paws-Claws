@@ -8,7 +8,7 @@ const useAuth = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    // فحص حالة الـ authentication عند تحميل الـ component
+
     useEffect(() => {
         checkAuthStatus();
     }, []);
@@ -19,7 +19,7 @@ const useAuth = () => {
 
         if (token) {
             try {
-                // التحقق من صحة التوكن (لو JWT)
+
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 const currentTime = Math.floor(Date.now() / 1000);
 
@@ -29,11 +29,11 @@ const useAuth = () => {
                         setUser(typeof userData === 'string' ? JSON.parse(userData) : userData);
                     }
                 } else {
-                    // التوكن منتهي الصلاحية
+
                     logout();
                 }
             } catch (error) {
-                // لو مش JWT token، اعتبره صالح
+
                 setIsAuthenticated(true);
                 if (userData) {
                     setUser(typeof userData === 'string' ? JSON.parse(userData) : userData);
@@ -56,7 +56,7 @@ const useAuth = () => {
     const logout = () => {
         cookies.remove('token');
         cookies.remove('user');
-        cookies.removeItem('user'); // في حالة كانت البيانات محفوظة في localStorage
+        cookies.removeItem('user');
 
         setIsAuthenticated(false);
         setUser(null);

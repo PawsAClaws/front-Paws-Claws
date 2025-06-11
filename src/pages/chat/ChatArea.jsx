@@ -1,5 +1,5 @@
-import React,{ useEffect, useState } from 'react';
-import { Send, Paperclip, Ellipsis, ArrowLeft, CheckCheck } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Send, Paperclip, Ellipsis, ArrowLeft } from 'lucide-react';
 
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
@@ -48,24 +48,24 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
         }
     }, [id]);
 
-    useEffect(()=>{
-        if(id && !selectedUser){
-            const user = async()=> {
-                const res =  await getUserId(id)
+    useEffect(() => {
+        if (id && !selectedUser) {
+            const user = async () => {
+                const res = await getUserId(id)
                 setReverser(res)
             }
             user()
         }
-        else if(selectedUser) {
+        else if (selectedUser) {
             setReverser(selectedUser)
         }
-    },[id,selectedUser])
+    }, [id, selectedUser])
 
-    useEffect(()=>{
-        if(socket && id){
-            socket.emit("seen",{receiverId: +id})
+    useEffect(() => {
+        if (socket && id) {
+            socket.emit("seen", { receiverId: +id })
         }
-    },[id,socket])
+    }, [id, socket])
 
     useEffect(() => {
         if (!socket) return;

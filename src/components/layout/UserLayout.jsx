@@ -1,9 +1,9 @@
 import React from 'react';
-import NavbarLogin from '../NavbarLogin';
 import { Outlet } from 'react-router-dom';
 import Footer from '../Footer';
 import { useSelector } from 'react-redux';
 import BecomeDoctor from '../BecomeDoctor';
+import NavbarLogin from '../nav/NavbarLogin';
 
 const UserLayout = () => {
     const showCard = useSelector((state) => state.card.showCard);

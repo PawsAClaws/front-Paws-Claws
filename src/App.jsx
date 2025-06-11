@@ -32,6 +32,9 @@ import DoctorMap from './pages/DoctorMap';
 import ChatRoom from './pages/chat/ChatRoom';
 import ProtectedRoute from './components/protectedRoutes/ProutectedRoutes';
 import './i18n';
+import AlertCard from './components/AlertCard';
+import UserProfile from './pages/UserProfile';
+
 
 
 
@@ -74,11 +77,12 @@ export default function App() {
         { path: "myWishlist", element: <MyWishLists /> },
         { path: "editProfile", element: <EditProfile /> },
         { path: "doctorDetail/:id", element: <DoctorDetails /> },
-        // { path: "userProfile/:id", element: <UserProfile /> },
+        { path: "userProfile/:id", element: <UserProfile /> },
         { path: "doctorPage", element: <DoctorPage /> },
         { path: "becomeDoctor", element: <BecomeDoctor /> },
         { path: "booking", element: <BookingSteps /> },
         { path: "chatRoom/:id?", element: <ChatRoom /> },
+        { path: "alertCard", element: <AlertCard /> },
       ]
     },
 

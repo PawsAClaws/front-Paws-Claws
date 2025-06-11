@@ -1,19 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import logo from '../assets/logo.png'
+import logo from '../../assets/logo.png'
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Heart, Globe, Bell } from "phosphor-react";
-import avatar from '../assets/avatar.png'
+import avatar from '../../assets/avatar.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import Search from './Search';
-import { useDispatch, useSelector } from "react-redux";
-import { togleCard } from '../store/becomeDoctorSlice.js';
-import NotificationsCard from './NotificationsCard.jsx';
-import { cookies } from '../lib/api.js';
-import { fetchMyDoc } from '../lib/getMyDoc.js';
+import Search from '../Search.jsx';
+import { useDispatch } from "react-redux";
+import { togleCard } from '../../store/becomeDoctorSlice.js';
+import NotificationsCard from '../NotificationsCard.jsx';
+import { cookies } from '../../lib/api.js';
+import { fetchMyDoc } from '../../lib/getMyDoc.js';
 import { useTranslation } from 'react-i18next';
-import MobileNav from './nav/MobileNav.jsx';
+import MobileNav from './MobileNav.jsx';
 
 export default function NavbarLogin() {
     const { t, i18n } = useTranslation();
@@ -32,7 +32,8 @@ export default function NavbarLogin() {
     const { data: wishlistItems = [] } = useQuery({
         queryKey: ['wishlist'],
         queryFn: async () => {
-            const { getAllWishList } = await import('../store/wishlist.js');
+            const { getAllWishList } = await import('../../store/wishlist.js')
+
             const result = await dispatch(getAllWishList()).unwrap();
             return result || [];
         },
@@ -46,7 +47,7 @@ export default function NavbarLogin() {
     const { data: userData = {} } = useQuery({
         queryKey: ['user', 'profile'],
         queryFn: async () => {
-            const { getUserData } = await import('../store/getUserSlice.js');
+            const { getUserData } = await import('../../store/getUserSlice.js');
             const result = await dispatch(getUserData()).unwrap();
             return result || {};
         },
@@ -60,7 +61,7 @@ export default function NavbarLogin() {
     const { data: notificationsList = { unreadCount: 0, notifications: [] } } = useQuery({
         queryKey: ['notifications'],
         queryFn: async () => {
-            const { fetchNotifications } = await import('../store/notificationsSlice.js');
+            const { fetchNotifications } = await import('../../store/notificationsSlice.js');
             const result = await dispatch(fetchNotifications()).unwrap();
             return result || { unreadCount: 0, notifications: [] };
         },

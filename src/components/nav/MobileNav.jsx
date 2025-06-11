@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { HouseLine, Plus, Bell } from 'phosphor-react'
 import { NavLink } from 'react-router-dom'
 import avatar from '../../assets/avatar.png'
-import { useDispatch, useSelector } from "react-redux";
-import { getUserData } from '../../store/getUserSlice';
-import { div } from 'framer-motion/client';
+import { useSelector } from "react-redux";
+
 import NotificationsCard from '../NotificationsCard';
 
 
