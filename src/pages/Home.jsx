@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import imgHome from '../assets/home-img.png'
 import { Package, Heart, House, BriefcaseMedical } from 'lucide-react';
 import { Link } from 'react-router-dom';

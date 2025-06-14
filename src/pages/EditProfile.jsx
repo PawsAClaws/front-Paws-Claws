@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../store/getUserSlice.js';
 import BASE_URL, { cookies } from '../lib/api.js';
 import avatar from '../assets/avatar.png';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const EditProfile = () => {
 
@@ -14,6 +16,8 @@ const EditProfile = () => {
 
     const dispatch = useDispatch();
     const userData = useSelector((state) => state.getUser.user);
+
+    const navigate = useNavigate();
 
 
 
@@ -47,7 +51,9 @@ const EditProfile = () => {
                 }
             );
 
-
+            console.log("done");
+            navigate('/profile');
+            toast.success("Profile updated successfully!");
 
         } catch (error) {
             console.log(error);
