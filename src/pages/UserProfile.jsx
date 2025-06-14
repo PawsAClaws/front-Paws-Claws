@@ -16,7 +16,7 @@ const UserProfile = () => {
     const { id } = useParams();
 
 
-    console.log(userAds);
+
 
 
 
@@ -42,7 +42,7 @@ const UserProfile = () => {
 
                 const data = await getUserId(id);
 
-                console.log(data);
+
 
                 setUserAds(data);
 

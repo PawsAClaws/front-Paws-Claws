@@ -18,6 +18,7 @@
     "profile": "Profile",
     "settings": "Settings",
     "myAds": "My Ads",
+    "reservations": "My Reservations",
     "myDocPage": "My Doc Page",
     "becomeDoctor": "Become a Doctor",
     "needHelp": "Need Help?"
@@ -88,5 +89,11 @@
     "adoption": "Adoption",
     "marketplace": "Marketplace",
     "contactUs": "Contact Us"
+  },
+  "sliders": {
+    "AdoptionPets": "pets for Adoption",
+    "SalePets": "pets for Sale",
+    "ShopPets": "Shop",
+    "Doctor": "Doctors"
   }
 }

@@ -27,7 +27,7 @@ export default function ForgetPassword() {
 
         axios.post('https://backend-online-courses.onrender.com/api/v1/password/forgot', values).then(({ data }) => {
 
-            console.log(data);
+
 
 
             if (data.status == "success") {
@@ -63,7 +63,7 @@ export default function ForgetPassword() {
 
 
         onSubmit: (values) => {
-            console.log(values)
+
             sendLoginData(values)
         }
     })

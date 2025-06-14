@@ -5,8 +5,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { ArrowRight } from "phosphor-react";
 import Card from './Card';
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 export default function ShopPets() {
+    const { t } = useTranslation();
     const shop = "shop";
 
     const {
@@ -31,7 +33,7 @@ export default function ShopPets() {
         return (
             <div className='container mx-auto mt-9'>
                 <div className='flex justify-between items-center mb-5'>
-                    <h3 className='text-3xl'>Featured products</h3>
+                    <h3 className='text-3xl'>{t('sliders.ShopPets')}</h3>
                     <Link to="/shop" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
@@ -49,7 +51,7 @@ export default function ShopPets() {
         return (
             <div className='container mx-auto mt-9'>
                 <div className='flex justify-between items-center mb-5'>
-                    <h3 className='text-3xl'>Featured products</h3>
+                    <h3 className='text-3xl'>{t('sliders.ShopPets')}</h3>
                     <Link to="/shop" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
@@ -60,12 +62,14 @@ export default function ShopPets() {
             </div>
         );
     }
+    ;
+
 
     return (
         <div className=''>
             <div className='container mx-auto'>
                 <div className='flex justify-between items-center mb-5 mt-9'>
-                    <h3 className='text-3xl'>Featured products</h3>
+                    <h3 className='text-3xl'>{t('sliders.ShopPets')}</h3>
                     <Link to="/shop" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>

@@ -15,7 +15,7 @@ const EditProfile = () => {
     const dispatch = useDispatch();
     const userData = useSelector((state) => state.getUser.user);
 
-    console.log(userData);
+
 
     useEffect(() => {
         dispatch(getUserData());
@@ -47,7 +47,7 @@ const EditProfile = () => {
                 }
             );
 
-            console.log(response.data);
+
 
         } catch (error) {
             console.log(error);
@@ -67,7 +67,7 @@ const EditProfile = () => {
         },
         enableReinitialize: true,
         onSubmit: (values) => {
-            console.log(values);
+
             handleData(values);
         }
     });

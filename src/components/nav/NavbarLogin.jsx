@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import logo from '../../assets/logo.png'
 import { motion } from "framer-motion";
@@ -19,10 +19,10 @@ export default function NavbarLogin() {
     const { t, i18n } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-    const menuRef = useRef(null);
-    const navigate = useNavigate()
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
+    const menuRef = useRef(null);
+    const navigate = useNavigate()
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
 
@@ -64,6 +64,7 @@ export default function NavbarLogin() {
             const { fetchNotifications } = await import('../../store/notificationsSlice.js');
             const result = await dispatch(fetchNotifications()).unwrap();
             return result || { unreadCount: 0, notifications: [] };
+
         },
         enabled: !!token,
         staleTime: 1 * 60 * 1000,
@@ -72,12 +73,24 @@ export default function NavbarLogin() {
         refetchInterval: 2 * 60 * 1000,
     });
 
+    // Calculate  unread notifications count 
+    const actualUnreadCount = useMemo(() => {
+        if (!notificationsList || !Array.isArray(notificationsList)) {
+            return 0;
+        }
+
+        return notificationsList.filter(notification =>
+            notification.isReead === false
+        ).length;
+    }, [notificationsList]);
+
+
     // Doctor Status Query
     const { data: checkDoc = false } = useQuery({
         queryKey: ['doctor', 'status'],
         queryFn: async () => {
             const res = await fetchMyDoc();
-            console.log(res.data);
+
             return res.data.active || false;
         },
         enabled: !!token,
@@ -86,26 +99,23 @@ export default function NavbarLogin() {
         refetchOnWindowFocus: false,
     });
 
-    console.log(userData);
-
-    // Language toggle function
+    // Language toggle function - only changes language, not direction
     const toggleLanguage = () => {
         const newLang = i18n.language === 'ar' ? 'en' : 'ar';
         i18n.changeLanguage(newLang);
 
-
-        document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+        // Keep direction as LTR and language as current
+        document.documentElement.dir = 'ltr';
         document.documentElement.lang = newLang;
     };
 
-
     useEffect(() => {
-        document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+        // Always keep direction as LTR regardless of language
+        document.documentElement.dir = 'ltr';
         document.documentElement.lang = i18n.language;
     }, [i18n.language]);
 
     function handleSignOut() {
-        // Clear all queries from cache when user signs out
         queryClient.clear();
         cookies.remove('token');
         navigate('/login');
@@ -125,7 +135,6 @@ export default function NavbarLogin() {
         };
     }, []);
 
-    // Helper function to get wishlist count
     const getWishlistCount = () => {
         if (Array.isArray(wishlistItems)) {
             return wishlistItems.length;
@@ -177,9 +186,9 @@ export default function NavbarLogin() {
                                         <div className='cursor-pointer capitalize'>{t('nav.notifications')}</div>
                                         <Bell className='cursor-pointer' />
                                         <span className='relative'>
-                                            {notificationsList.unreadCount > 0 && (
+                                            {actualUnreadCount > 0 && (
                                                 <span className="absolute -top-6 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                                                    {notificationsList.unreadCount}
+                                                    {actualUnreadCount}
                                                 </span>
                                             )}
                                         </span>
@@ -213,12 +222,14 @@ export default function NavbarLogin() {
                                             </button>
                                         </div>
 
+                                        {/* account menu */}
                                         {isAccountMenuOpen && (
                                             <div className="absolute top-14 right-5 w-48 border border-gray-200 bg-white shadow-lg rounded-lg py-4 z-50">
                                                 <ul className="flex flex-col text-center gap-4">
                                                     <li><Link to="profile">{t('menu.profile')}</Link></li>
                                                     <li><a href="#">{t('menu.settings')}</a></li>
                                                     <li><a href="#">{t('menu.myAds')}</a></li>
+                                                    <li><Link to="reservations">{t('menu.reservations')}</Link></li>
 
                                                     {checkDoc ? (
                                                         <li><Link to="doctorPage">{t('menu.myDocPage')}</Link></li>
@@ -262,6 +273,7 @@ export default function NavbarLogin() {
                     </div>
                 </div>
 
+                {/* Mobile Nav */}
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -334,8 +346,12 @@ export default function NavbarLogin() {
                     <div className='lg:hidden'>
                         <MobileNav
                             setIsNotificationsOpen={setIsNotificationsOpen}
-                            notificationsList={notificationsList}
+                            notificationsList={{
+                                ...notificationsList,
+                                unreadCount: actualUnreadCount
+                            }}
                             isNotificationsOpen={isNotificationsOpen}
+                            wishlistItems={wishlistItems}
                         />
                     </div>
                 ) : ''}

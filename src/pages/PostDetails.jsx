@@ -12,11 +12,11 @@ const PostDetails = () => {
     const [postDetails, setPostDetails] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
-    console.log(postDetails);
+
 
     const { id } = useParams()
 
-    console.log(id);
+
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -32,7 +32,7 @@ const PostDetails = () => {
                 setIsLoading(true);
                 const data = await fetchPostDetails(id)
                 setPostDetails(data?.data)
-                console.log(data.data);
+
                 setIsLoading(false);
 
             } catch (error) {

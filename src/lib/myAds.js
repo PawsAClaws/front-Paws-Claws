@@ -17,7 +17,7 @@ export const fetchMyAds = async () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log(result.data);
+
         return result.data
     } catch (error) {
         console.log(error);

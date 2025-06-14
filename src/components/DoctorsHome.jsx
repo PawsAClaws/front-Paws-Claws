@@ -5,8 +5,12 @@ import { Star, ArrowRight } from "phosphor-react";
 import 'swiper/css';
 import { fetchDeoctors } from '../lib/PagesApi';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function DoctorsHome() {
+
+    const { t } = useTranslation();
+
     const {
         data: allDoctorsHome = [],
         isLoading,
@@ -16,7 +20,7 @@ export default function DoctorsHome() {
         queryKey: ['doctors', 'home'],
         queryFn: async () => {
             const data = await fetchDeoctors();
-            console.log(data);
+
             return data.doctors;
         },
         staleTime: 5 * 60 * 1000,
@@ -30,7 +34,7 @@ export default function DoctorsHome() {
         return (
             <div className='container mx-auto pb-16'>
                 <div className='flex justify-between items-center mt-9 mb-5'>
-                    <h3 className='text-xl md:text-3xl font-bold capitalize'>doctors</h3>
+                    <h3 className='text-xl md:text-3xl font-bold capitalize'>{t('sliders.Doctors')}</h3>
                     <Link to="/doctors" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
@@ -48,7 +52,7 @@ export default function DoctorsHome() {
         return (
             <div className='container mx-auto pb-16'>
                 <div className='flex justify-between items-center mt-9 mb-5'>
-                    <h3 className='text-xl md:text-3xl font-bold capitalize'>doctors</h3>
+                    <h3 className='text-xl md:text-3xl font-bold capitalize'>{t('sliders.Doctors')}</h3>
                     <Link to="/doctors" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
@@ -63,7 +67,7 @@ export default function DoctorsHome() {
     return (
         <div className='container mx-auto pb-16'>
             <div className='flex justify-between items-center mt-9 mb-5'>
-                <h3 className='text-xl md:text-3xl font-bold capitalize'>doctors</h3>
+                <h3 className='text-xl md:text-3xl font-bold capitalize'>{t('sliders.Doctors')}</h3>
                 <Link to="/doctors" className='text-primary cursor-pointer text-2xl'>
                     See All <ArrowRight className='inline-block' />
                 </Link>

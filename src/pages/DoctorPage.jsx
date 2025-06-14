@@ -40,7 +40,7 @@ const DoctorPage = () => {
                     Authorization: `Bearer ${token}`,
                 }
             })
-            console.log(res.data.data.appointments);
+
             setTableData(res?.data?.data?.appointments);
         } catch (error) {
             console.log(error);
@@ -48,7 +48,7 @@ const DoctorPage = () => {
     }
 
     const managingAction = async (id, status) => {
-        console.log(id, status);
+
 
 
         try {
@@ -63,7 +63,7 @@ const DoctorPage = () => {
                         Authorization: `Bearer ${token}`,
                     }
                 })
-            console.log(res.data);
+
 
             managingDoctorRequst();
             if (status === "cancelled") {

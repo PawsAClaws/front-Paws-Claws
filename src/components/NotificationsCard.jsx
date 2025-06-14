@@ -17,7 +17,6 @@ const NotificationsCard = () => {
 
     const notificationsList = useSelector((state) => state.notifications);
 
-    console.log(notificationsList);
 
     useEffect(() => {
         dispatch(fetchNotifications());
@@ -40,7 +39,7 @@ const NotificationsCard = () => {
                 }
             });
 
-            console.log(res);
+
             dispatch(markAllAsRead());
 
         } catch (error) {

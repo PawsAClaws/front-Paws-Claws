@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import alertIcon from '../assets/logo.png'
+import alertIcon from '../assets/alertIcon.jpg'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ const AlertCard = ({ alertText }) => {
     const navigate = useNavigate();
 
     const message = location.state?.message;
-    console.log(location);
+
 
 
     useEffect(() => {

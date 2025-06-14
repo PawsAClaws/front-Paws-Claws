@@ -34,6 +34,7 @@ import ProtectedRoute from './components/protectedRoutes/ProutectedRoutes';
 import './i18n';
 import AlertCard from './components/AlertCard';
 import UserProfile from './pages/UserProfile';
+import Reservations from './pages/Reservations';
 
 
 
@@ -83,6 +84,7 @@ export default function App() {
         { path: "booking", element: <BookingSteps /> },
         { path: "chatRoom/:id?", element: <ChatRoom /> },
         { path: "alertCard", element: <AlertCard /> },
+        { path: "reservations", element: <Reservations /> },
       ]
     },
 

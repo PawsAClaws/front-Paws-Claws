@@ -5,9 +5,11 @@ import { ArrowRight } from "phosphor-react";
 import Card from "./Card";
 import { fetchPages } from "../lib/PagesApi";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import 'swiper/css';
 
 export default function SalePets() {
+    const { t } = useTranslation();
     const sell = "sale";
 
     const {
@@ -19,7 +21,7 @@ export default function SalePets() {
         queryKey: ['pets', 'sale'],
         queryFn: async () => {
             const data = await fetchPages(sell);
-            console.log(data);
+
             return data.posts;
         },
         staleTime: 5 * 60 * 1000,
@@ -33,7 +35,7 @@ export default function SalePets() {
         return (
             <div className='container mx-auto mt-9'>
                 <div className='flex justify-between items-center mb-5'>
-                    <h3 className="text-xl md:text-3xl font-bold">Pets for sell</h3>
+                    <h3 className="text-xl md:text-3xl font-bold">{t('sliders.SalePets')}</h3>
                     <Link to="/animals" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
@@ -51,7 +53,7 @@ export default function SalePets() {
         return (
             <div className='container mx-auto mt-9'>
                 <div className='flex justify-between items-center mb-5'>
-                    <h3 className="text-xl md:text-3xl font-bold">Pets for sell</h3>
+                    <h3 className="text-xl md:text-3xl font-bold">{t('sliders.SalePets')}</h3>
                     <Link to="/animals" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
@@ -67,7 +69,7 @@ export default function SalePets() {
         <div className=''>
             <div className='container mx-auto'>
                 <div className='flex justify-between items-center mt-9 mb-5'>
-                    <h3 className="text-xl md:text-3xl font-bold">Pets for sell</h3>
+                    <h3 className="text-xl md:text-3xl font-bold">{t('sliders.SalePets')}</h3>
                     <Link to="/animals" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>

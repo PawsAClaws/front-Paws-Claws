@@ -53,7 +53,7 @@ export default function BookingSteps() {
     const formattedDate = format(startDate, "yyyy-MM-dd");
 
 
-    console.log(formattedDate, animalType);
+
 
 
     const handleConfirm = async () => {
@@ -79,7 +79,7 @@ export default function BookingSteps() {
 
             });
 
-            console.log(res.data);
+
             toast.success("your appointment created successfully");
             navigate("/home");
 

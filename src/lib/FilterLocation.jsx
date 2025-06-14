@@ -7,8 +7,6 @@ const FilterLocation = ({ onCountryChange, onCityChange }) => {
     const [selectedCity, setSelectedCity] = useState("");
     const [cities, setCities] = useState([]);
 
-    console.log(selectedCountryName);
-    console.log(selectedCity);
 
 
     const countries = Country.getAllCountries();

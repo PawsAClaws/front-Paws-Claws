@@ -88,7 +88,7 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
             senderId,
             receiverId: +id,
         };
-        console.log(messageData);
+
         socket.emit('newMessage', messageData);
         setNewMessage('');
     };
@@ -106,8 +106,7 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
 
     const reversedMessages = [...messages];
 
-    console.log(reversedMessages);
-    console.log(reverser);
+
 
     return (
         <div className='w-full h-full flex flex-col'>

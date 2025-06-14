@@ -89,7 +89,7 @@ const BecomeDoctor = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log(res.data);
+
             toast.success("Your request sent successfully")
         } catch (err) {
             console.error('Error sending doctor data:', err);
@@ -120,7 +120,7 @@ const BecomeDoctor = () => {
         validationSchema,
 
         onSubmit: (values) => {
-            console.log(values);
+
 
             handleDoctorData(values)
 

@@ -38,7 +38,7 @@ export default function ResetPassword() {
 
         }).then(({ data }) => {
 
-            console.log(data);
+
 
 
 
@@ -76,7 +76,7 @@ export default function ResetPassword() {
 
 
         onSubmit: (values) => {
-            console.log(values)
+
             sendLoginData(values)
         }
     })

@@ -80,7 +80,7 @@ const Profile = () => {
         <div className='bg-[#F9FAFB]'>
 
             <div className='w-full relative '>
-                <img className='w-full ' src="https://as2.ftcdn.net/jpg/03/92/52/79/1000_F_392527967_xgcCQDVgieIQRNh3EbbOkS5AXcGsqzye.jpg" alt="" />
+                <div className="h-[200px] lg:h-[300px] sm:h-40 bg-gradient-to-r from-orange-300 to-orange-400" />
 
                 <div className='absolute top-[85%] right-[3%] -translate-y-1/2 -translate-x-1/2 flex gap-2 text-white cursor-pointer md:text-3xl'>
                     <Pencil />
@@ -160,7 +160,7 @@ const Profile = () => {
                                             <div className='flex justify-between mt-[18px]'>
                                                 <div> Published on  {item.createdAt ? formatDate(item.createdAt) : ''} </div>
 
-                                                <div className='bg-[#999999] w-fit px-[18px] py-1.5 rounded-[30px]'> live </div>
+                                                <div className='bg-[#F6EBE1] border border-black w-fit px-[18px] py-1.5 rounded-[30px]'> live </div>
 
                                             </div>
 

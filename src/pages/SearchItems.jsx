@@ -19,11 +19,11 @@ const SearchItems = () => {
 
 
 
-    console.log(allItems);
+
 
     const result = useSelector(state => state.search.results);
 
-    console.log(result);
+
 
 
 

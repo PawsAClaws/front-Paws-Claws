@@ -6,8 +6,13 @@ import { fetchPages } from "../lib/PagesApi";
 import Card from "./Card";
 import { Link } from "react-router-dom";
 import Loading from '../components/Loading';
+import { useTranslation } from 'react-i18next';
 
-export default function AdoptionPets({ data }) {
+
+export default function AdoptionPets() {
+
+    const { t } = useTranslation();
+
     const adoption = "adoption";
 
     const {
@@ -39,7 +44,7 @@ export default function AdoptionPets({ data }) {
         <div className=''>
             <div className=' container mx-auto  pt-8'>
                 <div className='flex justify-between items-center mt-9 mb-5'>
-                    <h3 className=" text-xl md:text-3xl font-bold"> Pets for  Adoption  </h3>
+                    <h3 className=" text-xl md:text-3xl font-bold"> {t('sliders.AdoptionPets')}  </h3>
                     <Link to="/adoption" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block ' />
                     </Link>

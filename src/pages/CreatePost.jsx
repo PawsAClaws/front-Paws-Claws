@@ -13,7 +13,7 @@ import { fetchCategoryById } from '../lib/categoryApi';
 import BASE_URL, { cookies } from '../lib/api';
 import Loading from "../components/Loading";
 import Location from '../lib/Location';
-import { interval } from 'date-fns';
+
 
 
 
@@ -22,10 +22,9 @@ export default function CreatePost() {
 
 
     const [categoriesId, setCategoriesId] = useState({});
-
+    const [previewImage, setPreviewImage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
-
 
     const { id } = useParams();
 
@@ -37,7 +36,6 @@ export default function CreatePost() {
 
                 const data = await fetchCategoryById(id);
                 setCategoriesId(data);
-                console.log(data);
 
             } catch (error) {
 
@@ -56,7 +54,7 @@ export default function CreatePost() {
     }, [])
 
 
-    console.log(categoriesId);
+
 
 
 
@@ -92,7 +90,7 @@ export default function CreatePost() {
                 }
             },)
 
-            console.log(res.data);
+
 
 
 
@@ -148,7 +146,7 @@ export default function CreatePost() {
         validationSchema,
         onSubmit: (values) => {
 
-            console.log(values);
+
             handleCreatePost(values)
 
         }
@@ -211,28 +209,66 @@ export default function CreatePost() {
                         <div className="pr-4 mt-2 ">
                             <label
                                 htmlFor="dropzone-file"
-                                className="flex flex-col items-center justify-center w-full h-72 md:h-[500px] xl:h-[750px]  border-border-light border rounded-lg cursor-pointer bg-gray-50  mt-4"
+                                className="flex flex-col items-center justify-center w-full h-72 md:h-[500px] xl:h-[750px] border-border-light border rounded-lg cursor-pointer bg-gray-50 mt-4 overflow-hidden"
                             >
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-
-                                    <div className="mb-2 flex items-center flex-col gap-2 text-sm px-14 text-center ">
-
-                                        <div> <Image className='text-[70px] text-[#999999]' /> </div>
-                                        <button onClick={() => document.getElementById('dropzone-file').click()} type='button' className='text-white cursor-pointer bg-primary py-3 px-[30px] rounded-sm'> Add images </button>
-
-                                        <p className='text-[#7A7A7A]'>5MB maximum file size accepted in the following formats:.jpg .jpeg png.gif</p>
-
+                                {previewImage ? (
+                                    <div className="relative w-full h-full">
+                                        <img
+                                            src={previewImage}
+                                            alt="Preview"
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0  bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    document.getElementById('dropzone-file').click();
+                                                }}
+                                                className="text-white bg-primary py-2 px-4 rounded-sm"
+                                            >
+                                                Change Image
+                                            </button>
+                                        </div>
                                     </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <div className="mb-2 flex items-center flex-col gap-2 text-sm px-14 text-center">
+                                            <div>
+                                                <Image className='text-[70px] text-[#999999]' />
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    document.getElementById('dropzone-file').click();
+                                                }}
+                                                type='button'
+                                                className='text-white cursor-pointer bg-primary py-3 px-[30px] rounded-sm'
+                                            >
+                                                Add images
+                                            </button>
+                                            <p className='text-[#7A7A7A]'>
+                                                5MB maximum file size accepted in the following formats:.jpg .jpeg png.gif
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
 
-                                </div>
                                 <input
                                     id="dropzone-file"
                                     type="file"
-                                    className="hidden "
-
+                                    className="hidden"
                                     accept="image/*"
                                     onChange={(e) => {
                                         const file = e.currentTarget.files[0];
+                                        if (file) {
+
+                                            const reader = new FileReader();
+                                            reader.onload = (event) => {
+                                                setPreviewImage(event.target.result);
+                                            };
+                                            reader.readAsDataURL(file);
+                                        }
                                         formik.setFieldValue('photo', file);
                                     }}
                                 />

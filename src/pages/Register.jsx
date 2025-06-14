@@ -26,11 +26,11 @@ export default function Register() {
 
         axios.post(' https://backend-online-courses.onrender.com/api/v1/auth/register', values).then(({ data }) => {
 
-            console.log(data);
+
 
 
             if (data.message == "user created successfully") {
-                console.log("done");
+
                 toast.success("user created successfully")
                 navigate('/login')
             }
@@ -76,7 +76,7 @@ export default function Register() {
 
 
         onSubmit: (values) => {
-            console.log(values)
+
             sendRegisterData(values)
         }
     })

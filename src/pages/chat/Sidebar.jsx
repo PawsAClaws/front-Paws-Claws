@@ -14,7 +14,7 @@ const Sidebar = ({ setShowChat, setSelectedUser }) => {
 
     const userData = useSelector((state) => state.getUser.user);
 
-    console.log(userData);
+
 
     useEffect(() => {
         const getConversations = async () => {
@@ -51,7 +51,7 @@ const Sidebar = ({ setShowChat, setSelectedUser }) => {
         }
     }
 
-    console.log(conversations);
+
 
     return (
         <div className="p-4 border-r border-[#BCBCBC] w-full h-full">

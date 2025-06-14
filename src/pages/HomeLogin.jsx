@@ -82,7 +82,8 @@ export default function HomeLogin() {
                         </div>
 
                         {/* Custom CSS for hiding/showing navigation arrows */}
-                        <style jsx>{`
+
+                        <style >{`
                             .group .swiper-button-next,
                             .group .swiper-button-prev {
                                 opacity: 0;
@@ -94,6 +95,7 @@ export default function HomeLogin() {
                                 opacity: 1;
                             }
                         `}</style>
+
                     </div>
 
                     <div>

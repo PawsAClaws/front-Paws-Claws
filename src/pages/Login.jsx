@@ -69,7 +69,7 @@ export default function Login() {
 
 
         onSubmit: (values) => {
-            console.log(values)
+
             sendLoginData(values)
         }
     })

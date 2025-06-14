@@ -1,9 +1,10 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import Footer from '../Footer';
 import { useSelector } from 'react-redux';
 import BecomeDoctor from '../BecomeDoctor';
 import NavbarLogin from '../nav/NavbarLogin';
+import { ChatsCircle } from "phosphor-react";
 
 const UserLayout = () => {
     const showCard = useSelector((state) => state.card.showCard);
@@ -22,7 +23,15 @@ const UserLayout = () => {
                 </div>
             )}
 
-            <Outlet />
+            <div className='relative'>
+                <Outlet />
+
+                <div className='fixed bottom-6 right-6 z-40'>
+                    <Link to="/chatRoom" className='w-12 h-12 flex items-center justify-center rounded-full bg-primary hover:bg-[rgba(254,142,47,0.28)] text-white shadow-lg cursor-pointer  '>
+                        <ChatsCircle size={24} />
+                    </Link>
+                </div>
+            </div>
             <Footer />
         </div>
     );

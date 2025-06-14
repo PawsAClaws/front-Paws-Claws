@@ -19,17 +19,9 @@ export const fetchPostDetails = async (id) => {
                 Authorization: `Bearer ${token}`,
             },
         });
-
         return result?.data
-
-
     } catch (error) {
-
-
         console.log(error);
-
-
     }
-
 
 }

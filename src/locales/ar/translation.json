@@ -18,6 +18,7 @@
     "profile": "الملف الشخصي",
     "settings": "الإعدادات",
     "myAds": "إعلاناتي",
+    "reservations": "حجوزاتي",
     "myDocPage": "صفحة الطبيب الخاصة بي",
     "becomeDoctor": "كن طبيباً",
     "needHelp": "تحتاج مساعدة؟"
@@ -88,5 +89,11 @@
     "adoption": "التبني",
     "marketplace": "السوق",
     "contactUs": "اتصل بنا"
+  },
+  "sliders": {
+    "AdoptionPets": "حيوانات للتبنى",
+    "SalePets": "حيوانات للبيع",
+    "ShopPets": " المتجر",
+    "Doctors": " الأطباء"
   }
 }

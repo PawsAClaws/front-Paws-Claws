@@ -36,7 +36,7 @@ const Categories = () => {
 
                 setMyCategories(data);
 
-                console.log(data);
+
 
 
             } catch (error) {

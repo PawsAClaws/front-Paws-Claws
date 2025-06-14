@@ -44,7 +44,7 @@ const DoctorDetails = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data.data);
+
             setDoctorDetails(response?.data?.data);
 
 
@@ -67,7 +67,7 @@ const DoctorDetails = () => {
             try {
 
                 const res = await fetchgetreview(id);
-                console.log(res);
+
                 setReviewsData(res);
 
             } catch (error) {
@@ -91,7 +91,7 @@ const DoctorDetails = () => {
 
         try {
             await fetchAddReview(id, myComment, myRating);
-            console.log("Review submitted successfully");
+
 
             setMyComment("");
             setMyRating(0);

@@ -53,3 +53,24 @@ export const fetchDeoctors = async () => {
     }
 
 }
+
+
+export const fetchReservations = async () => {
+
+    const token = cookies.get("token");
+
+    try {
+
+        const result = await axios.get(`${BASE_URL}/appointment/user`, {
+
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return result?.data
+    } catch (error) {
+        console.log(error);
+    }
+
+}

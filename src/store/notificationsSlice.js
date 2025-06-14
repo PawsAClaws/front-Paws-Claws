@@ -22,7 +22,7 @@ export const fetchNotifications = createAsyncThunk(
         });
 
 
-        console.log(response);
+
         return response.data.data;
     }
 );

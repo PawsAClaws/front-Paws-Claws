@@ -16,7 +16,7 @@ export const fetchConversations = async () => {
             }
         });
 
-        console.log('Conversations fetched:', response.data);
+
 
         return response?.data?.data;
 
@@ -37,7 +37,7 @@ export const fetchMessages = async (conversationId) => {
             }
         });
 
-        console.log(response.data);
+
 
         return response?.data?.data;
 
