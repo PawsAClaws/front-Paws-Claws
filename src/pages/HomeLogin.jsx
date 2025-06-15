@@ -75,7 +75,7 @@ export default function HomeLogin() {
                             ))}
                         </Swiper>
 
-                        <div className="absolute bottom-0 md:bottom-[5%] right-[10%] md:right-[5%] z-40">
+                        <div className="absolute hidden md:block bottom-0 md:bottom-[5%] right-[10%] md:right-[5%] z-40">
                             <Link to="/adoption" className="bg-primary text-sm md:text-md text-white py-2 px-4 md:py-3 md:px-10 cursor-pointer rounded-lg capitalize">
                                 adopt today
                             </Link>

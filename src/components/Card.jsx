@@ -17,7 +17,7 @@ export default function Card({ data }) {
     const wishlist = useSelector(state => state.getWishlist.items);
 
 
-    const inWishlist = wishlist?.some(item => item.postId === data.id);
+    const inWishlist = wishlist?.some(item => item?.postId === data?.id);
 
 
 
@@ -30,8 +30,8 @@ export default function Card({ data }) {
 
         try {
 
-            const response = await fetchWishList(data.id);
-            dispatch(toggleItem(data.id));
+            const response = await fetchWishList(data?.id);
+            dispatch(toggleItem(data?.id));
             toast.success(response.message.includes("added") ? "Added to wishlist ❤️" : "Removed from wishlist 💔");
 
         } catch (error) {
@@ -43,7 +43,7 @@ export default function Card({ data }) {
 
     return (
 
-        <Link to={`/postDetails/${data.id}`} className="bg-white rounded-lg relative" >
+        <Link to={`/postDetails/${data?.id}`} className="bg-white rounded-lg relative" >
 
             <div
                 onClick={(e) => {
@@ -63,21 +63,21 @@ export default function Card({ data }) {
             </div>
 
             <div className=' w-full h-[300px] '>
-                <img src={data.photo} alt={data.title} className="w-full h-full object-cover" />
+                <img src={data?.photo} alt={data?.title} className="w-full h-full object-cover" />
             </div>
 
             <div className="py-6 px-[18px]">
-                <h4 className="text-xl font-semibold  mb-2"> {data.title} </h4>
-                <p className="text-[#5F5B5B] my-6"> {data.description.split(' ').slice(0, 4).join(' ') + '...'}</p>
+                <h4 className="text-xl font-semibold  mb-2"> {data?.title} </h4>
+                <p className="text-[#5F5B5B] my-6"> {data?.description.split(' ').slice(0, 4).join(' ') + '...'}</p>
 
                 <div className='flex justify-between '>
 
                     <div className='flex items-center'>
                         <MapPinLine className=' text-primary text-xl' />
-                        <p className='ml-1 text-sm opacity-50'> {data.country} ( {data.city} ) </p>
+                        <p className='ml-1 text-sm opacity-50'> {data?.country} ( {data?.city} ) </p>
                     </div>
 
-                    <div className='text-primary text-xl'> ${data.price} </div>
+                    <div className='text-primary text-xl'> ${data?.price} </div>
 
                 </div>
             </div>

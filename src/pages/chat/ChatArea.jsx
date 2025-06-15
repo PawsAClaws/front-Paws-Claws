@@ -17,8 +17,9 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
     const [socket, setSocket] = useState(null);
     const userData = useSelector((state) => state.getUser.user);
     const senderId = userData.id;
-    const token = cookies.get('token');
+
     const { id } = useParams()
+    const token = cookies.get('token');
 
     useEffect(() => {
         const newSocket = io('https://backend-online-courses.onrender.com', {
@@ -38,9 +39,12 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
             const getMessages = async () => {
                 try {
                     const response = await fetchMessages(id);
-                    setMessages(response);
+                    // تأكد إن الresponse يكون array
+                    setMessages(Array.isArray(response) ? response : []);
                 } catch (error) {
                     console.error(error);
+                    // في حالة الخطأ، set messages كـ empty array
+                    setMessages([]);
                 }
             }
 
@@ -71,7 +75,10 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
         if (!socket) return;
 
         const handleNewMessage = (data) => {
-            setMessages((prevMessages) => [...prevMessages, data]);
+            setMessages((prevMessages) => {
+                // تأكد إن prevMessages يكون array قبل الspread
+                return Array.isArray(prevMessages) ? [...prevMessages, data] : [data];
+            });
         };
 
         socket.on('newMessage', handleNewMessage);
@@ -94,19 +101,14 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
     };
 
     const handleBackClick = () => {
-        // في الشاشات الصغيرة، ارجع للـ Sidebar
         if (setShowChat) {
             setShowChat(false);
         }
-        // أو ممكن تعمل navigate للصفحة الرئيسية للـ chat
-        // navigate('/chatRoom');
     };
 
-
-
-    const reversedMessages = [...messages];
-
-
+    // تأكد إن messages يكون array قبل عمل map عليه
+    const safeMessages = Array.isArray(messages) ? messages : [];
+    const reversedMessages = [...safeMessages];
 
     return (
         <div className='w-full h-full flex flex-col'>
@@ -136,7 +138,7 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 min-h-0">
-                {messages.length === 0 ? (
+                {safeMessages.length === 0 ? (
                     <div className="flex justify-center items-center h-full">
                         <p className="text-gray-500 text-sm">Start your conversation...</p>
                     </div>
@@ -144,7 +146,6 @@ const ChatArea = ({ setShowChat, selectedUser }) => {
                     <div className="space-y-6">
                         {reversedMessages.map((message, index) => (
                             <Message key={index} message={message} />
-                            // <></>
                         ))}
                     </div>
                 )}

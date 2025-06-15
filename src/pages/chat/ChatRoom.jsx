@@ -4,7 +4,6 @@ import Sidebar from './Sidebar';
 import ChatArea from './ChatArea';
 
 function ChatRoom() {
-    const { id } = useParams();
     const location = useLocation();
     const [showChat, setShowChat] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);

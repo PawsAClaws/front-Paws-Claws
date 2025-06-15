@@ -7,13 +7,14 @@ import { Heart, Globe, Bell } from "phosphor-react";
 import avatar from '../../assets/avatar.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Search from '../Search.jsx';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { togleCard } from '../../store/becomeDoctorSlice.js';
 import NotificationsCard from '../NotificationsCard.jsx';
 import { cookies } from '../../lib/api.js';
 import { fetchMyDoc } from '../../lib/getMyDoc.js';
 import { useTranslation } from 'react-i18next';
 import MobileNav from './MobileNav.jsx';
+import { getAllWishList } from "../../store/wishlist.js";
 
 export default function NavbarLogin() {
     const { t, i18n } = useTranslation();
@@ -21,27 +22,20 @@ export default function NavbarLogin() {
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
+
+
     const menuRef = useRef(null);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const wishlistItems = useSelector((state) => state.getWishlist.items);
     const queryClient = useQueryClient();
 
     const token = cookies.get('token');
 
-    // Wishlist Query
-    const { data: wishlistItems = [] } = useQuery({
-        queryKey: ['wishlist'],
-        queryFn: async () => {
-            const { getAllWishList } = await import('../../store/wishlist.js')
-
-            const result = await dispatch(getAllWishList()).unwrap();
-            return result || [];
-        },
-        enabled: !!token, //
-        staleTime: 2 * 60 * 1000,
-        cacheTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
-    });
+    // Wishlist
+    useEffect(() => {
+        dispatch(getAllWishList());
+    }, [dispatch]);
 
     // User Data Query
     const { data: userData = {} } = useQuery({
@@ -53,7 +47,7 @@ export default function NavbarLogin() {
         },
         enabled: !!token,
         staleTime: 5 * 60 * 1000,
-        cacheTime: 10 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
         refetchOnWindowFocus: false,
     });
 
@@ -64,53 +58,106 @@ export default function NavbarLogin() {
             const { fetchNotifications } = await import('../../store/notificationsSlice.js');
             const result = await dispatch(fetchNotifications()).unwrap();
             return result || { unreadCount: 0, notifications: [] };
-
         },
         enabled: !!token,
         staleTime: 1 * 60 * 1000,
-        cacheTime: 3 * 60 * 1000,
+        gcTime: 3 * 60 * 1000,
         refetchOnWindowFocus: false,
         refetchInterval: 2 * 60 * 1000,
     });
 
-    // Calculate  unread notifications count 
+    // Calculate unread notifications count 
     const actualUnreadCount = useMemo(() => {
         if (!notificationsList || !Array.isArray(notificationsList)) {
             return 0;
         }
-
         return notificationsList.filter(notification =>
             notification.isReead === false
         ).length;
     }, [notificationsList]);
-
 
     // Doctor Status Query
     const { data: checkDoc = false } = useQuery({
         queryKey: ['doctor', 'status'],
         queryFn: async () => {
             const res = await fetchMyDoc();
-
+            if (!res || res.message === "doctor not found") {
+                console.log("Doctor not found or inactive");
+                return false;
+            }
+            console.log("Doctor status response:", res);
             return res.data.active || false;
         },
         enabled: !!token,
         staleTime: 10 * 60 * 1000,
-        cacheTime: 15 * 60 * 1000,
+        gcTime: 15 * 60 * 1000,
         refetchOnWindowFocus: false,
     });
 
-    // Language toggle function - only changes language, not direction
+    // Helper function to update wishlist count in cache
+    const updateWishlistCache = (newItem = null, removeItemId = null) => {
+        queryClient.setQueryData(['wishlist'], (oldData) => {
+            if (!oldData) return [];
+
+            if (removeItemId) {
+                // Remove item from wishlist
+                if (Array.isArray(oldData)) {
+                    return oldData.filter(item => item.id !== removeItemId);
+                }
+                return {
+                    ...oldData,
+                    items: oldData.items?.filter(item => item.id !== removeItemId) || []
+                };
+            }
+
+            if (newItem) {
+                // Add item to wishlist
+                if (Array.isArray(oldData)) {
+                    return [...oldData, newItem];
+                }
+                return {
+                    ...oldData,
+                    items: [...(oldData.items || []), newItem]
+                };
+            }
+
+            return oldData;
+        });
+    };
+
+    // Make the cache updater available globally (optional)
+    useEffect(() => {
+        window.updateWishlistCache = updateWishlistCache;
+
+        // Listen for custom events from other components
+        const handleWishlistUpdate = (event) => {
+            const { action, item, itemId } = event.detail;
+            if (action === 'add') {
+                updateWishlistCache(item);
+            } else if (action === 'remove') {
+                updateWishlistCache(null, itemId);
+            } else if (action === 'refresh') {
+                queryClient.invalidateQueries(['wishlist']);
+            }
+        };
+
+        window.addEventListener('wishlistUpdate', handleWishlistUpdate);
+
+        return () => {
+            window.removeEventListener('wishlistUpdate', handleWishlistUpdate);
+            delete window.updateWishlistCache;
+        };
+    }, [queryClient]);
+
+    // Language toggle function
     const toggleLanguage = () => {
         const newLang = i18n.language === 'ar' ? 'en' : 'ar';
         i18n.changeLanguage(newLang);
-
-        // Keep direction as LTR and language as current
         document.documentElement.dir = 'ltr';
         document.documentElement.lang = newLang;
     };
 
     useEffect(() => {
-        // Always keep direction as LTR regardless of language
         document.documentElement.dir = 'ltr';
         document.documentElement.lang = i18n.language;
     }, [i18n.language]);
@@ -129,7 +176,6 @@ export default function NavbarLogin() {
         };
 
         document.addEventListener('mousedown', handleClickOutside);
-
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -164,14 +210,24 @@ export default function NavbarLogin() {
                                 <p>{i18n.language === 'ar' ? 'English' : 'عربي'}</p>
                             </div>
 
-                            {/* wishlist */}
+                            {/* Enhanced wishlist with real-time updates */}
                             {token ? (
-                                <Link to="myWishlist" className='text-primary border-e-black lg:text-lg xl:text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'>
+                                <Link
+                                    to="myWishlist"
+                                    className='text-primary border-e-black lg:text-lg xl:text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'
+                                    onClick={() => {
+                                        // Refresh wishlist when clicked (optional)
+                                        queryClient.invalidateQueries(['wishlist']);
+                                    }}
+                                >
                                     {t('nav.wishlist')}
                                     <span className="relative">
                                         <Heart className='inline-block' />
                                         {getWishlistCount() > 0 && (
-                                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                            <span
+                                                className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full transition-all duration-300"
+                                                key={getWishlistCount()} // Force re-render when count changes
+                                            >
                                                 {getWishlistCount()}
                                             </span>
                                         )}
