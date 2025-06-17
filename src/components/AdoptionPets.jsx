@@ -43,9 +43,9 @@ export default function AdoptionPets() {
     return (
         <div className=''>
             <div className=' container mx-auto  pt-8'>
-                <div className='flex justify-between items-center mt-9 mb-5'>
-                    <h3 className=" text-xl md:text-3xl font-bold"> {t('sliders.AdoptionPets')}  </h3>
-                    <Link to="/adoption" className='text-primary cursor-pointer text-2xl'>
+                <div className='flex justify-between items-center mt-9 mb-5 px-2 sm:px-0'>
+                    <h3 className=" text-xl md:text-3xl font-bold capitalize"> {t('sliders.AdoptionPets')}  </h3>
+                    <Link to="/adoption" className='text-primary cursor-pointer  text-sm lg:text-xl'>
                         See All <ArrowRight className='inline-block ' />
                     </Link>
                 </div>

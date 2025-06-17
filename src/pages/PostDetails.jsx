@@ -53,22 +53,22 @@ const PostDetails = () => {
         <div className='container mx-auto '>
             <div>
                 <div className='flex justify-center mt-16'>
-                    <img className='w-1/2' src={postDetails?.photo ? postDetails?.photo : avatar} alt={postDetails?.title} />
+                    <img className='w-1/3' src={postDetails?.photo ? postDetails?.photo : avatar} alt={postDetails?.title} />
                 </div>
                 <div className='  md:h-[200px]  mt-8 flex justify-between flex-col'>
 
                     <div className='flex justify-between  '>
                         <h5 className='md:text-3xl lg:text-[40px] font-semibold tracking-[0.32px]'> {postDetails?.title} </h5>
-                        <div className='text-center text-primary tracking-[0.2px]'> {postDetails?.price == 0 ? t('postDetails.free') : postDetails?.price} </div>
+                        <div className='text-center text-primary md:text-2xl lg:text-3xl tracking-[0.2px]'> {postDetails?.price == 0 ? t('postDetails.free') : postDetails?.price} </div>
                     </div>
 
-                    <div className='flex  justify-between '>
+                    <div className='flex  justify-between md:text-xl '>
                         <div className='flex items-center'>
-                            <MapPinLine className='text-primary text-xl' />
-                            <p className='ml-2 text-sm opacity-50'> {postDetails?.country} ( {postDetails?.city} ) </p>
+                            <MapPinLine className='text-primary ' />
+                            <p className='ml-2  opacity-50'> {postDetails?.country} ( {postDetails?.city} ) </p>
                         </div>
 
-                        <div className='bg-[#FBF0E7] p-3  text-center w-fit'> {postDetails?.negotiable ? t('createAd.Negotiable') : t('createAd.not negotiable')} </div>
+                        <div className='bg-[#FBF0E7] p-3 rounded-lg text-center w-fit'> {postDetails?.negotiable ? t('createAd.Negotiable') : t('createAd.not negotiable')} </div>
                     </div>
 
                 </div>
@@ -96,8 +96,8 @@ const PostDetails = () => {
                 <div className='h-[1px] mt-16 mb-8 bg-[#C2C2C2]'></div>
 
                 <div className='flex flex-col gap-4 w-full lg:w-1/2 md:w-[90%]'>
-                    <h6 className='text-2xl'> {t('postDetails.description')} </h6>
-                    <p> {postDetails?.description} </p>
+                    <h6 className='text-3xl'> {t('postDetails.description')} </h6>
+                    <p className='md:text-2xl'> {postDetails?.description} </p>
                 </div>
                 <div className='h-[1px] mt-16 mb-8 bg-[#C2C2C2]'></div>
                 <div className='h-[200px]'>

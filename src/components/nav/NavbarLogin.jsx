@@ -15,6 +15,9 @@ import { fetchMyDoc } from '../../lib/getMyDoc.js';
 import { useTranslation } from 'react-i18next';
 import MobileNav from './MobileNav.jsx';
 import { getAllWishList } from "../../store/wishlist.js";
+import egFlag from '../../assets/eg.png';
+import usFlag from '../../assets/us.png';
+
 
 export default function NavbarLogin() {
     const { t, i18n } = useTranslation();
@@ -207,56 +210,54 @@ export default function NavbarLogin() {
                                 className={`${token ? 'border-e-black border-e pe-3' : ''} lg:text-lg xl:text-2xl cursor-pointer`}
                                 onClick={toggleLanguage}
                             >
-                                <p>{i18n.language === 'ar' ? 'English' : 'عربي'}</p>
+                                <p>{i18n.language === 'ar' ? <img src={usFlag} alt="English" /> : <img src={egFlag} alt="عربي" />}</p>
                             </div>
 
                             {/* Enhanced wishlist with real-time updates */}
-                            {token ? (
-                                <Link
-                                    to="myWishlist"
-                                    className='text-primary border-e-black lg:text-lg xl:text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'
-                                    onClick={() => {
-                                        // Refresh wishlist when clicked (optional)
-                                        queryClient.invalidateQueries(['wishlist']);
-                                    }}
-                                >
-                                    {t('nav.wishlist')}
-                                    <span className="relative">
-                                        <Heart className='inline-block' />
-                                        {getWishlistCount() > 0 && (
-                                            <span
-                                                className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full transition-all duration-300"
-                                                key={getWishlistCount()} // Force re-render when count changes
-                                            >
-                                                {getWishlistCount()}
+                            <Link
+                                to="myWishlist"
+                                className='text-primary border-e-black lg:text-lg xl:text-2xl border-e pe-2 flex items-center gap-1 cursor-pointer'
+                                onClick={() => {
+
+                                    queryClient.invalidateQueries(['wishlist']);
+                                }}
+                            >
+                                {t('nav.wishlist')}
+                                <span className="relative">
+                                    <Heart className='inline-block' />
+                                    {getWishlistCount() > 0 && (
+                                        <span
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full transition-all duration-300"
+                                            key={getWishlistCount()}
+                                        >
+                                            {getWishlistCount()}
+                                        </span>
+                                    )}
+                                </span>
+                            </Link>
+
+                            {/* notifications */}
+
+                            <div className='relative'>
+                                <div onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className='lg:text-lg xl:text-2xl items-center flex gap-2 text-primary'>
+                                    <div className='cursor-pointer capitalize'>{t('nav.notifications')}</div>
+                                    <Bell className='cursor-pointer' />
+                                    <span className='relative'>
+                                        {actualUnreadCount > 0 && (
+                                            <span className="absolute -top-6 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                                {actualUnreadCount}
                                             </span>
                                         )}
                                     </span>
-                                </Link>
-                            ) : ''}
-
-                            {/* notifications */}
-                            {token ? (
-                                <div className='relative'>
-                                    <div onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className='lg:text-lg xl:text-2xl items-center flex gap-2 text-primary'>
-                                        <div className='cursor-pointer capitalize'>{t('nav.notifications')}</div>
-                                        <Bell className='cursor-pointer' />
-                                        <span className='relative'>
-                                            {actualUnreadCount > 0 && (
-                                                <span className="absolute -top-6 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                                                    {actualUnreadCount}
-                                                </span>
-                                            )}
-                                        </span>
-                                    </div>
-
-                                    <div className='absolute top-10 right-0'>
-                                        {isNotificationsOpen && (
-                                            <NotificationsCard />
-                                        )}
-                                    </div>
                                 </div>
-                            ) : ''}
+
+                                <div className='absolute top-10 right-0'>
+                                    {isNotificationsOpen && (
+                                        <NotificationsCard />
+                                    )}
+                                </div>
+                            </div>
+
                         </div>
 
                         {/* account menu */}
@@ -339,16 +340,16 @@ export default function NavbarLogin() {
                     >
                         {token ? (
                             <div className='bg-[#FF9131] py-4 px-3 flex-wrap gap-y-2 flex items-center justify-between'>
+
                                 <Link to="categories" className="bg-white cursor-pointer lg:hidden text-primary rounded-lg py-2 px-[18px]">
                                     {t('nav.postYourAd')}
                                 </Link>
 
-                                <div className='flex gap-1.5' onClick={toggleLanguage}>
-                                    <span className='text-xl md:text-2xl cursor-pointer'>{i18n.language === 'ar' ? 'English' : 'عربي'}</span>
-                                    <span><Globe className='inline-block text-2xl md:text-3xl cursor-pointer' /></span>
+                                <div className='' onClick={toggleLanguage}>
+                                    <span className='text-xl md:text-2xl cursor-pointer'>{i18n.language === 'ar' ? <img src={usFlag} alt="English" /> : <img src={egFlag} alt="عربي" />}</span>
                                 </div>
 
-                                <div className='gap-[18px] items-center flex ml-auto sm:ml-0'>
+                                <div className='gap-[18px] items-center flex  sm:ml-0'>
                                     <div>
                                         <p className='text-white'>{userData.firstName ? userData.firstName : t('user.user')}</p>
                                     </div>
@@ -357,6 +358,7 @@ export default function NavbarLogin() {
                                         <img className='w-full h-full rounded-full' src={userData.photo ? userData.photo : avatar} alt="avatar" />
                                     </div>
                                 </div>
+
                             </div>
                         ) : (
                             <div className='px-6'>
@@ -392,7 +394,7 @@ export default function NavbarLogin() {
                             </ul>
                         </div>
 
-                        <Link to="categories" className="bg-[#FEA230] cursor-pointer hidden lg:flex text-white rounded-lg py-2 px-[18px]">
+                        <Link to="categories" className="bg-primary cursor-pointer hidden lg:flex text-white rounded-lg py-2 px-[18px]">
                             {t('nav.postYourAd')}
                         </Link>
                     </div>

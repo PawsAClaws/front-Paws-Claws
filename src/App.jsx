@@ -1,4 +1,4 @@
-import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router-dom';
 import React from 'react';
 import GuestLayout from './components/layout/GuestLayout';
 import UserLayout from './components/layout/UserLayout';
@@ -41,7 +41,7 @@ import Reservations from './pages/Reservations';
 
 
 export default function App() {
-  const routes = createHashRouter([
+  const routes = createBrowserRouter([
     // GuestLayout 
     {
       path: '/',

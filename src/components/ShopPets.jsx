@@ -32,9 +32,9 @@ export default function ShopPets() {
     if (isLoading) {
         return (
             <div className='container mx-auto mt-9'>
-                <div className='flex justify-between items-center mb-5'>
-                    <h3 className='text-3xl'>{t('sliders.ShopPets')}</h3>
-                    <Link to="/shop" className='text-primary cursor-pointer text-2xl'>
+                <div className='flex justify-between items-center mb-5 px-2 sm:px-0'>
+                    <h3 className='text-xl md:text-3xl font-bold capitalize'>{t('sliders.ShopPets')}</h3>
+                    <Link to="/shop" className='text-primary cursor-pointer text-sm lg:text-xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
                 </div>
@@ -50,9 +50,9 @@ export default function ShopPets() {
         console.error('Error fetching shop products:', error);
         return (
             <div className='container mx-auto mt-9'>
-                <div className='flex justify-between items-center mb-5'>
-                    <h3 className='text-3xl'>{t('sliders.ShopPets')}</h3>
-                    <Link to="/shop" className='text-primary cursor-pointer text-2xl'>
+                <div className='flex justify-between items-center mb-5 px-2 sm:px-0'>
+                    <h3 className='text-xl md:text-3xl font-bold capitalize'>{t('sliders.ShopPets')}</h3>
+                    <Link to="/shop" className='text-primary cursor-pointer text-sm lg:text-xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
                 </div>
@@ -68,9 +68,9 @@ export default function ShopPets() {
     return (
         <div className=''>
             <div className='container mx-auto'>
-                <div className='flex justify-between items-center mb-5 mt-9'>
-                    <h3 className='text-3xl'>{t('sliders.ShopPets')}</h3>
-                    <Link to="/shop" className='text-primary cursor-pointer text-2xl'>
+                <div className='flex justify-between items-center mb-5 mt-9 px-2 sm:px-0'>
+                    <h3 className='text-xl md:text-3xl font-bold capitalize'>{t('sliders.ShopPets')}</h3>
+                    <Link to="/shop" className='text-primary cursor-pointer text-sm lg:text-xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
                 </div>

@@ -35,7 +35,7 @@ export default function SalePets() {
         return (
             <div className='container mx-auto mt-9'>
                 <div className='flex justify-between items-center mb-5'>
-                    <h3 className="text-xl md:text-3xl font-bold">{t('sliders.SalePets')}</h3>
+                    <h3 className="text-xl md:text-3xl font-bold capitalize" >{t('sliders.SalePets')}</h3>
                     <Link to="/animals" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
@@ -52,9 +52,9 @@ export default function SalePets() {
         console.error('Error fetching pets:', error);
         return (
             <div className='container mx-auto mt-9'>
-                <div className='flex justify-between items-center mb-5'>
-                    <h3 className="text-xl md:text-3xl font-bold">{t('sliders.SalePets')}</h3>
-                    <Link to="/animals" className='text-primary cursor-pointer text-2xl'>
+                <div className='flex justify-between items-center mb-5 px-2 sm:px-0'>
+                    <h3 className="text-xl md:text-3xl font-bold capitalize">{t('sliders.SalePets')}</h3>
+                    <Link to="/animals" className='text-primary cursor-pointer text-sm lg:text-xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
                 </div>
@@ -69,7 +69,7 @@ export default function SalePets() {
         <div className=''>
             <div className='container mx-auto'>
                 <div className='flex justify-between items-center mt-9 mb-5'>
-                    <h3 className="text-xl md:text-3xl font-bold">{t('sliders.SalePets')}</h3>
+                    <h3 className="text-xl md:text-3xl font-bold capitalize">{t('sliders.SalePets')}</h3>
                     <Link to="/animals" className='text-primary cursor-pointer text-2xl'>
                         See All <ArrowRight className='inline-block' />
                     </Link>
